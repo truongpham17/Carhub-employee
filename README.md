@@ -22,11 +22,9 @@ These instructions will get you a copy of the project up and running on your loc
   https://www.getpostman.com/downloads/
 
   Yarn
+  ```
   choco install yarn
-
-```
-Give examples
-```
+  ```
 
 ### Installing
 
@@ -51,13 +49,63 @@ pod install
 cd ..
 ```
 
-Open file src/constants/api, add your localhost
+Open file src/constants/api, add your localhost with port 5068, and comment others. Example
+```
+export const API_URL = 'http://192.168.1.105:5068/'; //truongpham
+```
 
-Example
-// truong
-```
-export const API_URL = 'http://192.168.1.105:5068/';
-```
+
+
+## Static compilation
+  Install extensions
+
+  Prettier - Code formatter
+  Eslint
+
+  Open VSCode settings, choose Edit in settings.json, and change the content as following:
+  ```
+  {
+    "editor.fontFamily": "Operator Mono Lig",
+    "editor.formatOnSave": true,
+    "[javascript]": {
+        "editor.formatOnSave": false
+    },
+    "eslint.autoFixOnSave": true,
+    "prettier.disableLanguages": [
+        "js",
+        "graphql"
+    ],
+    "javascript.updateImportsOnFileMove.enabled": "never",
+    "editor.tabSize": 2,
+    "window.zoomLevel": -1,
+    "workbench.startupEditor": "newUntitledFile",
+    "editor.fontSize": 16,
+    "editor.parameterHints": false,
+    "javascript.validate.enable": false,
+    "workbench.colorTheme": "Atom One Dark",
+    "editor.suggestSelection": "first",
+    "vsintellicode.modify.editor.suggestSelection": "automaticallyOverrodeDefaultValue",
+    "java.configuration.checkProjectSettingsExclusions": false,
+    "editor.codeActionsOnSave": {
+        "source.fixAll.eslint": true
+    }
+  }
+  ```
+
+  Open the src/constants/TestPrettierAndEslint.js, and add these following code: 
+  ```
+  const a = 12 ;;
+
+
+  ```
+  Installing static compilation is success when the VSCode show error, and when Ctrl + S, it automaticly re-format the code.
+
+## Deployment
+
+Create your own branch before coding
+Deploy to your branch, and create merge request and assign to @truongpham17
+
+## Running
 
 Starting bundle
 ```
@@ -69,13 +117,7 @@ For the mobile device haven't install the app, run
 yarn android
 ```
 
-Start backend services, if the screen status is: Connect success! -> setup success
-
-## Deployment
-
-Create your own branch before coding
-Deploy to your branch, and create merge request and assign to @truongpham17
-
+Start backend services, connect to server success if the screen status is: Connect success!
 
 ## Authors
 
