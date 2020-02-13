@@ -1,0 +1,179 @@
+{
+  "homescreen": {
+    "urge": "URGE",
+    "progress": "Tiến độ"
+  },
+  "progress": {
+    "progress": "Tiến độ",
+    "longest": "Lâu nhất",
+    "streak": "Đỉnh điểm",
+    "relapse": "Xuất tinh",
+    "currentrank": "Cấp độ hiện tại",
+    "detail": "Chi tiết",
+    "lastday": "Bạn đã trụ được",
+    "currentachieve": "Cấp độ hiện tại",
+    "nextrank": "Cấp độ tiếp theo",
+    "reset": "Xuất tinh",
+    "current": "Hiện tại",
+    "total": "Tổng",
+    "last": "Lần cuối",
+    "statictis": "Thống kê",
+    "achievement": "Thành tích",
+    "info": "Chi tiết"
+  },
+  "constant": {
+    "people": "người",
+    "day": "ngày",
+    "days": "ngày",
+    "done": "Xong",
+    "submit": "Xác nhận",
+    "edit": "Sửa",
+    "cancel": "Đóng",
+    "hr": "Giờ",
+    "Mon": "Thứ 2",
+    "Tue": "Thứ 3",
+    "Wed": "Thứ 4",
+    "Thu": "Thứ 5",
+    "Fri": "Thứ 6",
+    "Sat": "Thứ 7",
+    "Sun": "CN",
+    "January": "Tháng 1",
+    "February": "Tháng 2",
+    "March": "Tháng 3",
+    "April": "Tháng 4",
+    "May": "Tháng 5",
+    "June": "Tháng 6",
+    "July": "Tháng 7",
+    "August": "Tháng 8",
+    "September": "Tháng 9",
+    "October": "Tháng 10",
+    "November": "Tháng 11",
+    "December": "Tháng 12",
+    "other": ">>"
+  },
+  "profile": {
+    "accountdetail": "Chi tiết",
+    "editprofile": "Thay đổi thông tin",
+    "contribute": "Đóng góp",
+    "setting": "Cài đặt",
+    "joinus": "Tham gia với chúng tôi",
+    "group": "Facebook",
+    "website": "Website",
+    "loginrequire": "Đăng nhập ngay để quản lý thông tin và đóng góp cho cộng đồng",
+    "loginnow": "Đăng nhập ngay",
+    "commitmentTitle": "Nhớ những gì bạn đã nói chứ?"
+  },
+  "setting": {
+    "language": "Ngôn ngữ",
+    "porn": "Chặn porn",
+    "logout": "Đăng xuất",
+    "setting": "Cài đặt",
+    "turnon": "Bật",
+    "turnoff": "Tắt",
+    "logoutTitle": "Đăng xuất?",
+    "logoutDescription": "Khi bạn đăng xuất, toàn bộ quá trình của bạn trên thiết bị sẽ bị xoá. Tuy nhiên dữ liệu sẽ được tải về khi đăng nhập"
+  },
+  "language": {
+    "vietnam": "Tiếng Việt",
+    "english": "Tiếng Anh"
+  },
+  "contribute": {
+    "question": "Câu hỏi",
+    "submit": "Gửi nội dung",
+    "donate": "Đóng góp",
+    "feedback": "Phản hồi",
+    "contribute": "Đóng góp"
+  },
+  "question": {
+    "placeholder": "Viết nội dung câu hỏi..."
+  },
+  "submit": {
+    "description": "Mô tả",
+    "placeholder": "Mô tả nội dung hoặc url",
+    "choosememe": "Chọn meme hoặc hình ảnh mà bạn muốn upload"
+  },
+  "feedback": {
+    "title": "Chúng tôi cần cải thiện những gì?",
+    "design": "Thiết kế",
+    "service": "Dịch vụ",
+    "feature": "Tính năng",
+    "placeholder": "Mô tả cụ thể",
+    "selectImage": "Chọn hình ảnh",
+    "success": "Mọi góp ý đều quan trọng để chúng tôi cải thiện dịch vụ của mình",
+    "thankyou": "Cảm ơn bạn"
+  },
+  "editprofile": {
+    "title": "Thông tin",
+    "avatar": "Ảnh đại diện",
+    "name": "Tên",
+    "nickname": "Nickname",
+    "bio": "Giới thiệu bản thân",
+    "phone": "Số điện thoại",
+    "dateOfBirth": "Ngày sinh",
+    "gender": "Giới tính"
+  },
+  "urge": {
+    "urge": "Urge",
+    "inspire": "Cố gắng lên, bạn có thể làm được!",
+    "inspireExplain": "Hãy thử làm gì đó mà bạn yêu thích để quên nó đi, hoặc nằm thư giản và tự cảm nhận bản thân",
+    "motivation": "Cần tí động lực?",
+    "calm": "Dịu nhẹ tâm hồn",
+    "meme": "Meme - thư giản"
+  },
+  "rollcall": {
+    "rollcall": "Điểm danh",
+    "norollcall": "Hiện tại chưa có đợt điểm danh nào được mở, vui lòng quay lại sau",
+    "pendingrollcall": "Đăng ký điểm danh ngay, quá trình đăng ký sẽ đóng vào cuối tháng",
+    "waitingrollcall": "Bạn vui lòng đợi đến đầu tháng để bắt đầu quá trình điểm danh",
+    "join": "Số người đã tham gia:"
+  },
+  "people": {
+    "people": "Cộng đồng",
+    "statistic": "Thống kê",
+    "honorable": "Xếp hạng",
+    "chart": "Biểu đồ",
+    "present": "Bảng",
+    "norecord": "Không có",
+    "relapsecount": "Số lần relapse theo tháng",
+    "relapse": "Số lần",
+    "daystreak": "Streak trong tháng",
+    "streak": "streak",
+    "longest": "Lâu nhất",
+    "current": "Hiện tại",
+    "Streak": "Streak",
+    "failed": "Thất bại",
+    "missSubmit": "Chưa điểm danh",
+    "success": "Thành công",
+    "total": "tổng",
+    "totalParticipants": "Số người tham gia"
+  },
+  "login": {
+    "welcome": "Chào mừng bạn đến với cộng đồng Không fap",
+    "facebook": "Đăng nhập với Facebook",
+    "gmail": "Đăng nhập với Gmail"
+  },
+  "initial": {
+    "signin": "ĐĂNG NHẬP",
+    "startnow": "BẮT ĐẦU NGAY!"
+  },
+  "entergoal": {
+    "entergoal": "Mục tiêu",
+    "placeholder": "Mục tiêu của bạn",
+    "placeholderDetail": "Mô tả cụ thể mục tiêu của bạn",
+    "description": "Hãy ghi cụ thể những gì mà bạn mong muốn đạt được sau khi bạn chiến thắng bản thân với không fap, điều này sẽ giúp bạn có thêm động lực mỗi khi bạn cảm thấy không ổn."
+  },
+  "loginrequire": {
+    "description": "Để sử dụng tính năng này, bạn cần phải login",
+    "loginnow": "Đăng nhập ngay"
+  },
+  "quote": {
+    "quote": "Câu nói hay"
+  },
+  "exit": {
+    "title": "Bạn có chắc chắn thoát?",
+    "description": "Khi bạn thoát, thông tin bạn vừa nhập sẽ không được lưu. Thoát?",
+    "close": "Đóng",
+    "exit": "Thoát"
+  },
+
+}

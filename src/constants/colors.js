@@ -1,0 +1,18 @@
+const colors = {
+  PRIMARY_COLOR_1: '#333333',
+  PRIMARY_COLOR_2: '#ff78ae',
+  PRIMARY_COLOR_3: '#ffa0d2',
+  PRIMARY_COLOR_0: '#0F4C81',
+
+  NEUTRAL_COLOR_WHITE: '#333333',
+  NEUTRAL_COLOR_BLACK: '#333333',
+  NEUTRAL_COLOR_GRAY: '#c4c4c4',
+  GRAY_LIGHT: '#F0F0F0',
+
+  TEXT_LIGHT_COLOR: '#ffffff',
+  TEXT_DEFAULT_COLOR: '#333333',
+  DARK_LIGHT_COLOR: '#EEEEEE',
+  LIGHT_COLOR: '#ffffff',
+};
+
+export default colors;
