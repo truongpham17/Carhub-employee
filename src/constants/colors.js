@@ -1,18 +1,20 @@
 const colors = {
-  PRIMARY_COLOR_1: '#333333',
-  PRIMARY_COLOR_2: '#ff78ae',
-  PRIMARY_COLOR_3: '#ffa0d2',
-  PRIMARY_COLOR_0: '#0F4C81',
-
-  NEUTRAL_COLOR_WHITE: '#333333',
-  NEUTRAL_COLOR_BLACK: '#333333',
-  NEUTRAL_COLOR_GRAY: '#c4c4c4',
-  GRAY_LIGHT: '#F0F0F0',
-
-  TEXT_LIGHT_COLOR: '#ffffff',
-  TEXT_DEFAULT_COLOR: '#333333',
-  DARK_LIGHT_COLOR: '#EEEEEE',
-  LIGHT_COLOR: '#ffffff',
+  white: '#FFFFFF',
+  dark: '#020E19',
+  dark20: '#353E47',
+  dark40: '#676E75',
+  dark60: '#9A9FA3',
+  dark80: '#CCCFD1',
+  dark90: '#E6E7E8',
+  dark95: '#F3F3F4',
+  primary: '#08457E',
+  primaryLight: '#396A98',
+  secondary: '#7DD8C6',
+  secondaryLight: '#97E0D1',
+  success: '#01A368',
+  successLight: '#34B586',
+  error: '#FF3F34',
+  errorLight: '#FF655D',
 };
 
 export default colors;

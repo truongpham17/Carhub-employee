@@ -8,7 +8,6 @@ import {
   SafeAreaView,
   StyleSheet,
   ScrollView,
-  Platform,
   StyleProp,
   ViewStyle,
   BackHandler,
