@@ -20,7 +20,6 @@ import { GET_APP_DATA } from 'Apollo/graphql/queries';
 import { loading as loadingAnimated } from 'Assets/animation';
 
 import { dimension, i18n } from 'Constants';
-import { ApolloError } from 'apollo-client';
 import { useQuery } from '@apollo/react-hooks';
 import { themeType } from 'types/theme';
 import { language } from 'Constants/i18n/type';
@@ -48,7 +47,7 @@ type PropTypes = {
   scrollable: ?boolean,
   tabbarComponent?: {},
   loading: boolean,
-  requestError?: ApolloError,
+  requestError?: {},
   isErrorImportant?: boolean,
   onErrorPress?: () => void,
   dismissLoading?: boolean,
@@ -91,8 +90,6 @@ const ViewContainer = ({
   const [errorData, setError] = useState(null);
   const [backVisible, setBackVisible] = useState(false);
 
-  const { data: appData } = useQuery(GET_APP_DATA, { returnPartialData: true });
-
   const backController = handleBack => {
     console.log(handleBack);
     if (handleBack) {
@@ -128,11 +125,7 @@ const ViewContainer = ({
 
   useEffect(() => {
     if (!requestError) return;
-    if (
-      requestError &&
-      requestError.message &&
-      requestError.message.includes('Unauthorized')
-    ) {
+    if (requestError) {
       /**
        * @implementation request get token
        */
@@ -141,19 +134,10 @@ const ViewContainer = ({
         label: 'Your token has been expired, please logout and login again!',
       });
     } else {
-      const { isConnected } = appData.app;
-      if (!isConnected) {
-        // show error with no network
-        setError({
-          errorType: 'no-internet',
-          label: 'No internet, please stay connect!',
-        });
-      } else {
-        setError({
-          errorType: 'server',
-          label: 'Oh no! There is an unknown error',
-        });
-      }
+      setError({
+        errorType: 'server',
+        label: 'Oh no! There is an unknown error',
+      });
     }
 
     setTimeout(() => {
