@@ -6,10 +6,12 @@ import {
   createDrawerNavigator,
 } from 'react-navigation';
 
-import {TestScreen} from './test';
+import { TestScreen } from './test';
+import SelectCarScreen from './select-car-screen/SelectCarScreen';
 
 const TestNavigator = createStackNavigator(
   {
+    SelectCarScreen,
     TestScreen,
   },
   {

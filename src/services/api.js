@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-import {API_URL, METHODS} from 'constants/api';
+import { API_URL, METHODS } from 'Constants/api';
 import store from '@redux/store';
 
 export const query = ({
