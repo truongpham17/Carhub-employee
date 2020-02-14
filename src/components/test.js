@@ -2,8 +2,8 @@ import React from 'react';
 import { View, StyleSheet, Text, TouchableWithoutFeedback } from 'react-native';
 import { withNavigation } from 'react-navigation';
 import { Icon } from 'react-native-elements';
-import { colors } from '../constants/color';
-import { textStyles } from '../constants/Style';
+import { textStyle } from 'Constants/textStyles';
+import { colors } from 'Constants/color';
 // navigation.state.routeName
 const TAB_NAME = [
   'DiscoveryScreen',
@@ -34,7 +34,7 @@ class TabBar extends React.PureComponent {
     <TouchableWithoutFeedback onPress={onPress} key={title}>
       <View>
         <Icon name={icon} type="entypo" size={20} color={color} />
-        <Text style={[textStyles.smallDark, { color }]}>{title}</Text>
+        <Text style={[textStyle.smallDark, { color }]}>{title}</Text>
       </View>
     </TouchableWithoutFeedback>
   );
