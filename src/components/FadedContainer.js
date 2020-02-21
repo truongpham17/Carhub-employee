@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { View, Animated, StyleProp, ViewStyle, StyleSheet } from 'react-native';
+import { Animated, StyleProp, ViewStyle, StyleSheet } from 'react-native';
 
 type PropTypes = {
   containerStyle: StyleProp<ViewStyle>,

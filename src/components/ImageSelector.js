@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React from 'react';
 import {
   View,
   StyleSheet,
@@ -8,16 +8,13 @@ import {
   Image,
   Text,
 } from 'react-native';
-import { themeType } from 'types/theme';
-import { ViewContainer } from 'Component';
-import { withTheme } from 'Component/ThemeProvider';
 import { scaleHor, scaleVer } from 'Constants/dimensions';
 import { Remove, AddImage } from 'Assets/svgs';
 import { shadowStyle } from 'Constants';
-import { textStyle, textStyleObject } from 'Constants/textStyles';
+import { textStyleObject } from 'Constants/textStyles';
+import colors from 'Constants/colors';
 
 type PropTypes = {
-  theme: themeType,
   style: StyleProp<ViewStyle>,
   data?: { uri: string, key: string },
   onRemovePress?: () => void,
@@ -25,13 +22,11 @@ type PropTypes = {
 };
 
 const ImageSelector = ({
-  theme,
   style,
   data,
   onRemovePress,
   onAddPress,
 }: PropTypes) => {
-  const { current: styles } = useRef(getStyles(theme));
   const handleRemovePress = () => {
     onRemovePress(data.key);
   };
@@ -64,35 +59,33 @@ const ImageSelector = ({
 
 export default ImageSelector;
 
-function getStyles(theme: themeType) {
-  return StyleSheet.create({
-    img: {
-      flex: 1,
-      borderRadius: 4,
-      ...shadowStyle.ELEVATION_3,
-    },
-    container: {
-      width: scaleHor(130),
-      height: scaleHor(130),
-      padding: scaleHor(10),
-    },
-    remove: {
-      position: 'absolute',
-      top: 0,
-      right: 0,
-    },
-    empty: {
-      flex: 1,
-      borderRadius: 4,
-      alignItems: 'center',
-      justifyContent: 'center',
-      backgroundColor: theme.dark80,
-    },
-    text: {
-      ...textStyleObject.bodyTextBold,
-      fontSize: 10,
-      color: theme.white,
-      marginTop: scaleVer(8),
-    },
-  });
-}
+const styles = StyleSheet.create({
+  img: {
+    flex: 1,
+    borderRadius: 4,
+    ...shadowStyle.ELEVATION_3,
+  },
+  container: {
+    width: scaleHor(130),
+    height: scaleHor(130),
+    padding: scaleHor(10),
+  },
+  remove: {
+    position: 'absolute',
+    top: 0,
+    right: 0,
+  },
+  empty: {
+    flex: 1,
+    borderRadius: 4,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: colors.dark80,
+  },
+  text: {
+    ...textStyleObject.bodyTextBold,
+    fontSize: 10,
+    color: colors.white,
+    marginTop: scaleVer(8),
+  },
+});

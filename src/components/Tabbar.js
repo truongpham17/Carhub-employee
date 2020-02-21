@@ -1,13 +1,9 @@
 import React from 'react';
 import { View, StyleSheet, TouchableWithoutFeedback } from 'react-native';
-import Svg, { Path } from 'react-native-svg';
-import * as shape from 'd3-shape';
-import { withNavigation } from 'react-navigation';
-
 import { NavigationType } from 'types';
 
 import { dimension, color, shadowStyle } from 'Constants';
-import { Home, Profile, getSvg } from 'Assets/svgs';
+import { getSvg } from 'Assets/svgs';
 import { changeTab } from 'Utils/Navigation';
 
 const { SCREEN_WIDTH } = dimension;

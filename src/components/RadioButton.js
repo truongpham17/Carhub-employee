@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
 
 const DEFAULT_SIZE_MULTIPLIER = 0.7;

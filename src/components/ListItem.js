@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React from 'react';
 import {
   View,
   StyleSheet,
@@ -8,14 +8,13 @@ import {
   ViewStyle,
   StyleProp,
 } from 'react-native';
-import { themeType } from 'types/theme';
 import { defaultFunction } from 'Utils/common';
 import { scaleHor } from 'Constants/dimensions';
 import { getSvg } from 'Assets/svgs';
 import { textStyle, textStyleObject } from 'Constants/textStyles';
+import colors from 'Constants/colors';
 
 type PropTypes = {
-  theme: themeType,
   icon?: string,
   label?: string,
   nextIcon?: string,
@@ -28,7 +27,6 @@ type PropTypes = {
 };
 
 const ListItem = ({
-  theme,
   icon,
   label = '',
   nextIcon,
@@ -39,19 +37,17 @@ const ListItem = ({
   containerStyle,
   pressable = true,
 }: PropTypes) => {
-  const { current: styles } = useRef(getStyles(theme));
-
   const getAction = () => {
     switch (type) {
       case 'text':
-        return getSvg(nextIcon, { fill: theme.dark20 });
+        return getSvg(nextIcon, { fill: colors.dark20 });
       case 'toggle':
         return <Switch value />;
       case 'detail':
         return (
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
             <Text style={styles.detail}>{detail}</Text>
-            {getSvg(nextIcon, { fill: theme.dark20 })}
+            {getSvg(nextIcon, { fill: colors.dark20 })}
           </View>
         );
       default:
@@ -71,7 +67,7 @@ const ListItem = ({
       <View style={styles.labelContainer}>
         {icon && (
           <View style={{ marginEnd: scaleHor(16), width: scaleHor(16) }}>
-            {getSvg(icon, { fill: theme.dark20 })}
+            {getSvg(icon, { fill: colors.dark20 })}
           </View>
         )}
         <Text style={styles.label}>{label}</Text>
@@ -83,32 +79,30 @@ const ListItem = ({
 
 export default ListItem;
 
-function getStyles(theme: themeType) {
-  return StyleSheet.create({
-    container: {
-      height: scaleHor(60),
-      paddingHorizontal: scaleHor(8),
-      alignItems: 'center',
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      alignSelf: 'stretch',
-    },
-    label: {
-      ...textStyle.bodyTextBold,
-      color: theme.dark20,
-    },
-    labelContainer: {
-      flexDirection: 'row',
-      alignItems: 'center',
-    },
-    detail: {
-      ...textStyleObject.bodyText,
-      color: theme.dark20,
-      marginEnd: scaleHor(8),
-    },
-    separator: {
-      borderBottomWidth: 1,
-      borderBottomColor: theme.dark90,
-    },
-  });
-}
+const styles = StyleSheet.create({
+  container: {
+    height: scaleHor(60),
+    paddingHorizontal: scaleHor(8),
+    alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignSelf: 'stretch',
+  },
+  label: {
+    ...textStyle.bodyTextBold,
+    color: colors.dark20,
+  },
+  labelContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  detail: {
+    ...textStyleObject.bodyText,
+    color: colors.dark20,
+    marginEnd: scaleHor(8),
+  },
+  separator: {
+    borderBottomWidth: 1,
+    borderBottomColor: colors.dark90,
+  },
+});

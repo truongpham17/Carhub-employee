@@ -7,11 +7,11 @@ import {
   ViewStyle,
   View,
 } from 'react-native';
-import { themeType } from 'types/theme';
 import LinearGradient from 'react-native-linear-gradient';
 import { textStyle, textStyleObject } from 'Constants/textStyles';
 import { scaleVer, scaleHor } from 'Constants/dimensions';
 import { getSvg } from 'Assets/svgs';
+import colors from 'Constants/colors';
 
 type PropTypes = {
   onPress: () => void,
@@ -19,7 +19,6 @@ type PropTypes = {
   gradient?: boolean,
   colorStart?: string,
   colorEnd?: string,
-  theme: themeType,
   style: StyleProp<ViewStyle>,
   textColor: string,
   iconOnly?: boolean,
@@ -29,14 +28,13 @@ type PropTypes = {
 };
 
 const Button = ({
-  theme,
   onPress,
   label = '',
   gradient = true,
-  colorStart = theme.primaryLight,
-  colorEnd = theme.primary,
+  colorStart = colors.primaryLight,
+  colorEnd = colors.primary,
   style,
-  textColor = theme.white,
+  textColor = colors.white,
   iconOnly = false,
   icon = null,
   leftIcon = null,
@@ -55,7 +53,7 @@ const Button = ({
           start={{ x: 0.5, y: 0 }}
           end={{ x: 0.5, y: 1 }}
           colors={
-            disable ? [theme.dark90, theme.dark80] : [colorStart, colorEnd]
+            disable ? [colors.dark90, colors.dark80] : [colorStart, colorEnd]
           }
           locations={[0, 1]}
         >

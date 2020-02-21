@@ -13,7 +13,6 @@ type PropTypes = {
   description: string,
   cancelLabel?: string,
   confirmLabel?: string,
-  theme: themeType,
 };
 
 const ConfirmPopup = ({
@@ -24,7 +23,6 @@ const ConfirmPopup = ({
   description,
   cancelLabel = 'Cancel',
   confirmLabel = 'Ok',
-  theme,
 }: PropTypes) => (
   <ModalContainer modalVisible={modalVisible} onClose={onClose}>
     <View style={styles.containerStyle}>

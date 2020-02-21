@@ -1,53 +1,17 @@
-// import { Tabbar } from './tabbar';
-// import HeaderText from './HeaderText';
-// import ProgressHeader from './progress-header/ProgressHeader';
-
-import ViewContainer from './ViewContainer';
-import CircleProgress from './CircleProgress';
-import BackTitle from './BackTitle';
 import AppGradient from './AppGradient';
-import ConfirmButton from './ConfirmButton';
-import Tabbar from './Tabbar';
-import ModalContainer from './ModalContainer';
-import RadioButton from './RadioButton';
-import CardInfo from './card';
-import FadedContainer from './FadedContainer';
-import LottieContainer from './LottieContainer';
-import CodePushComponent from './CodePushComponent';
-import Text from './TextTheme';
-import Search from './Search';
-import Button from './Button';
-import DraggableList from './draggableList/DraggableList';
-import TextForm from './TextForm';
-import ListItem from './ListItem';
 import Avatar from './Avatar';
+import Button from './Button';
+import ConfirmPopup from './ConfirmPopup';
+import ErrorFeedback from './ErrorFeedback';
+import Header from './Header';
 import ImageSelector from './ImageSelector';
-import TextItem from './TextItem';
-import TextDescription from './TextDescription';
+import InputForm from './InputForm';
+import ListItem from './ListItem';
+import ModalContainer from './ModalContainer';
 import PopupForm from './PopupForm';
+import RadioButton from './RadioButton';
+import Tabbar from './Tabbar';
+import ViewContainer from './ViewContainer';
 
-export {
-  ViewContainer,
-  CircleProgress,
-  BackTitle,
-  AppGradient,
-  ConfirmButton,
-  Tabbar,
-  ModalContainer,
-  RadioButton,
-  CardInfo,
-  FadedContainer,
-  LottieContainer,
-  CodePushComponent,
-  Text,
-  Search,
-  Button,
-  DraggableList,
-  TextForm,
-  ListItem,
-  Avatar,
-  ImageSelector,
-  TextItem,
-  TextDescription,
-  PopupForm,
-};
+
+export {AppGradient, Avatar, Button, ConfirmPopup, ErrorFeedback, Header, ImageSelector, InputForm, ListItem, ModalContainer, PopupForm, RadioButton, Tabbar,ViewContainer}
