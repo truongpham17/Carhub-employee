@@ -3,8 +3,8 @@ require_relative '../node_modules/@react-native-community/cli-platform-ios/nativ
 pod 'Firebase/Core', '~> 6.3.0'
 
 
-target 'Carhub' do
-  # Pods for Carhub
+target 'Manage' do
+  # Pods for Manage
   pod 'FBLazyVector', :path => "../node_modules/react-native/Libraries/FBLazyVector"
   pod 'FBReactNativeSpec', :path => "../node_modules/react-native/Libraries/FBReactNativeSpec"
   pod 'RCTRequired', :path => "../node_modules/react-native/Libraries/RCTRequired"
@@ -35,7 +35,7 @@ target 'Carhub' do
   pod 'glog', :podspec => '../node_modules/react-native/third-party-podspecs/glog.podspec'
   pod 'Folly', :podspec => '../node_modules/react-native/third-party-podspecs/Folly.podspec'
 
-  target 'CarhubTests' do
+  target 'ManageTests' do
     inherit! :search_paths
     # Pods for testing
   end
@@ -43,10 +43,10 @@ target 'Carhub' do
   use_native_modules!
 end
 
-target 'Carhub-tvOS' do
-  # Pods for Carhub-tvOS
+target 'Manage-tvOS' do
+  # Pods for Manage-tvOS
 
-  target 'Carhub-tvOSTests' do
+  target 'Manage-tvOSTests' do
     inherit! :search_paths
     # Pods for testing
   end
