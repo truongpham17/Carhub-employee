@@ -14,6 +14,7 @@ import Tabbar from './Tabbar';
 import ViewContainer from './ViewContainer';
 import DatePicker from './DatePicker';
 import SearchMapInput from './SearchMapInput';
+import ButtonGroup from './ButtonGroup';
 
 export {
   AppGradient,
@@ -32,4 +33,5 @@ export {
   ViewContainer,
   DatePicker,
   SearchMapInput,
+  ButtonGroup,
 };

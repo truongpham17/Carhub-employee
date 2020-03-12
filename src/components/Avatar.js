@@ -23,9 +23,9 @@ const Avatar = ({
       source={{ uri }}
       style={[
         {
-          width: scaleHor(100),
-          height: scaleHor(100),
-          borderRadius: scaleHor(50),
+          width: scaleHor(80),
+          height: scaleHor(80),
+          borderRadius: scaleHor(40),
           // backgroundColor: 'green',
         },
         style,

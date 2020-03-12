@@ -16,7 +16,7 @@ import LottieView from 'lottie-react-native';
 
 import { loading as loadingAnimated } from 'Assets/animation';
 
-import { scaleHor } from 'Constants/dimensions';
+import { scaleHor, scaleVer } from 'Constants/dimensions';
 import colors from 'Constants/colors';
 import ErrorFeedback from './ErrorFeedback';
 import FadedContainer from './FadedContainer';
@@ -140,7 +140,7 @@ const ViewContainer = ({
         backType={backType}
         style={{
           marginHorizontal: scaleHor(24),
-          // paddingTop: scaleVer(24),
+          paddingTop: scaleVer(24),
         }}
       />
     );
@@ -176,7 +176,7 @@ const ViewContainer = ({
       style={[styles.containerStyle, containerStyle]}
       safe={safeArea}
     >
-      <StatusBar barStyle="dark-content" />
+      <StatusBar barStyle="dark-content" hidden />
       {/* <SafeAreaView /> */}
       {renderBackTitle()}
       {renderComponent()}

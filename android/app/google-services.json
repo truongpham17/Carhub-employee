@@ -38,6 +38,57 @@
             {
               "client_id": "269972622936-ja39oit80bvhmehsr64prk56kp2ti8et.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "269972622936-v1cdb1pqh16r6ge3td2g906o9mnsd9m9.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "org.reactjs.native.example.Carhub"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:269972622936:android:157881579bb5451dac042d",
+        "android_client_info": {
+          "package_name": "com.carhub.employee"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "269972622936-krd6jqaoch3iefpqp4u6qbt4oejaet74.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.carhub.employee",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
+        {
+          "client_id": "269972622936-ja39oit80bvhmehsr64prk56kp2ti8et.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCpJvz8cyWsWLsqflxPCetWyhaqDVA_c64"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "269972622936-ja39oit80bvhmehsr64prk56kp2ti8et.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "269972622936-v1cdb1pqh16r6ge3td2g906o9mnsd9m9.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "org.reactjs.native.example.Carhub"
+              }
             }
           ]
         }
