@@ -8,10 +8,10 @@ import { getRentalList } from '@redux/actions/rental';
 import { getLeaseList } from '@redux/actions/lease';
 
 import { NavigationType } from 'types';
-import { dimension } from 'Constants';
+// import { dimension } from 'Constants';
 import { scaleHor, scaleVer } from 'Constants/dimensions';
-import RequestListScreen from '../request-list-screen/RequestListScreen';
-import LeaseListScreen from '../lease-list-screen/LeaseListScreen';
+import ListRequestRentalScreen from '../list-request-rental-screen/ListRequestRentalScreen';
+import ListRequestLeaseScreen from '../list-request-lease-screen/ListRequestLeaseScreen';
 
 type PropTypes = {
   navigation: NavigationType,
@@ -73,10 +73,10 @@ const RequestScreen = ({
         ref={ref => (viewPagerRef.current = ref)}
       >
         <View key="1" style={{ paddingHorizontal: scaleHor(24) }}>
-          <RequestListScreen navigation={navigation} />
+          <ListRequestRentalScreen navigation={navigation} />
         </View>
         <View key="2" style={{ paddingHorizontal: scaleHor(24) }}>
-          <LeaseListScreen navigation={navigation} />
+          <ListRequestLeaseScreen navigation={navigation} />
         </View>
       </ViewPager>
     </ViewContainer>
