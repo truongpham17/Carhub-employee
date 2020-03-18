@@ -1,23 +1,33 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, FlatList } from 'react-native';
 import { ViewContainer } from 'Components';
-import { setSelectedRental } from '@redux/actions/rental';
+import { setSelectedRental, getRentalList } from '@redux/actions/rental';
 import { NavigationType, RentalType } from 'types';
 import { connect } from 'react-redux';
 import moment from 'moment';
-import RequestItem from './RequestItem';
+import RequestRentalItem from './RequestRentalItem';
 
 type PropsType = {
   navigation: NavigationType,
   rentalList: [RentalType],
   setSelectedRental: string => void,
+  getRentalList: () => void,
 };
 
-const RequestListScreen = ({
+const ListRequestRentalScreen = ({
   navigation,
   rentalList,
   setSelectedRental,
+  getRentalList,
 }: PropsType) => {
+  const [refreshing, setRefreshing] = useState(true);
+  useEffect(() => {
+    navigation.addListener('didFocus', () => setRefreshing(true));
+    if (refreshing) {
+      getRentalList();
+      setRefreshing(false);
+    }
+  }, [refreshing]);
   const onItemPress = _id => {
     setSelectedRental(_id);
     const selectedRental = rentalList.find(item => item._id === _id);
@@ -45,7 +55,7 @@ const RequestListScreen = ({
           label: 'Pick up location',
           value: selectedRental.pickupHub.address,
         },
-        { att: 'type', label: 'Type', value: 'Hiring request' },
+        { value: 'Waiting for hire' },
       ],
       avatar: selectedRental.customer.avatar,
       name: selectedRental.customer.fullName,
@@ -53,14 +63,17 @@ const RequestListScreen = ({
       onConfirm: () => {},
       onDecline: () => {},
     });
+    setRefreshing(true);
   };
 
   const renderItem = ({ item, index }) => (
-    <RequestItem data={item} onItemPress={onItemPress} />
+    <RequestRentalItem data={item} onItemPress={onItemPress} />
   );
 
   return (
     <FlatList
+      refreshing={refreshing}
+      onRefresh={() => setRefreshing(true)}
       data={rentalList}
       renderItem={renderItem}
       keyExtractor={(item, index) => index}
@@ -75,5 +88,5 @@ export default connect(
   state => ({
     rentalList: state.rental.rentals,
   }),
-  { setSelectedRental }
-)(RequestListScreen);
+  { setSelectedRental, getRentalList }
+)(ListRequestRentalScreen);

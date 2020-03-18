@@ -1,10 +1,13 @@
-import { INITIAL_CALLBACK, ENDPOINTS, STATUS } from 'Constants/api';
+import { INITIAL_CALLBACK, ENDPOINTS, STATUS, METHODS } from 'Constants/api';
 import { query } from 'services/api';
 import {
   GET_LEASE_FAILURE,
   GET_LEASE_REQUEST,
   GET_LEASE_SUCCESS,
   SET_SELECT_LEASE,
+  UPDATE_LEASE_ITEM_FAILURE,
+  UPDATE_LEASE_ITEM_REQUEST,
+  UPDATE_LEASE_ITEM_SUCCESS,
 } from '../constants/lease';
 
 export function getLeaseList(data, callback = INITIAL_CALLBACK) {
@@ -29,3 +32,29 @@ export function setSelectedLease(_id) {
     payload: _id,
   };
 }
+
+export const updateLeaseStatus = (
+  { id, status },
+  callback = INITIAL_CALLBACK
+) => async dispatch => {
+  try {
+    dispatch({
+      type: UPDATE_LEASE_ITEM_REQUEST,
+    });
+    const result = await query({
+      method: METHODS.patch,
+      endpoint: `${ENDPOINTS.lease}/${id}`,
+      data: { status },
+    });
+    if (result.status === 200) {
+      dispatch({ type: UPDATE_LEASE_ITEM_SUCCESS, payload: result.data });
+      callback.onSuccess();
+    }
+  } catch (error) {
+    dispatch({
+      type: UPDATE_LEASE_ITEM_FAILURE,
+      payload: error,
+    });
+    callback.onFailure();
+  }
+};

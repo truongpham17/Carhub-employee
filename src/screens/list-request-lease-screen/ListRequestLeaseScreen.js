@@ -7,7 +7,7 @@ import { LeaseType, NavigationType } from 'types';
 import { connect } from 'react-redux';
 
 import moment from 'moment';
-import LeaseItem from './LeaseItem';
+import RequestLeaseItem from './RequestLeaseItem';
 
 type PropTypes = {
   leaseList: [LeaseType],
@@ -15,7 +15,7 @@ type PropTypes = {
   navigation: NavigationType,
 };
 
-const LeaseListScreen = ({
+const ListRequestLeaseScreen = ({
   leaseList,
   setSelectedLease,
   navigation,
@@ -60,7 +60,7 @@ const LeaseListScreen = ({
     <FlatList
       data={leaseList}
       renderItem={({ item, index }) => (
-        <LeaseItem data={item} onItemPress={onItemPress} />
+        <RequestLeaseItem data={item} onItemPress={onItemPress} />
       )}
       keyExtractor={(item, index) => item._id}
       showsVerticalScrollIndicator={false}
@@ -70,5 +70,5 @@ const LeaseListScreen = ({
 
 export default connect(state => ({ leaseList: state.lease.leases }), {
   setSelectedLease,
-})(LeaseListScreen);
+})(ListRequestLeaseScreen);
 const styles = StyleSheet.create({});
