@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, FlatList } from 'react-native';
 import { ViewContainer } from 'Components';
-import { setSelectedRental } from '@redux/actions/rental';
+import { setSelectedRental, getRentalList } from '@redux/actions/rental';
 import { NavigationType, RentalType } from 'types';
 import { connect } from 'react-redux';
 import moment from 'moment';
@@ -11,13 +11,23 @@ type PropsType = {
   navigation: NavigationType,
   rentalList: [RentalType],
   setSelectedRental: string => void,
+  getRentalList: () => void,
 };
 
 const ListRequestRentalScreen = ({
   navigation,
   rentalList,
   setSelectedRental,
+  getRentalList,
 }: PropsType) => {
+  const [refreshing, setRefreshing] = useState(true);
+  useEffect(() => {
+    navigation.addListener('didFocus', () => setRefreshing(true));
+    if (refreshing) {
+      getRentalList();
+      setRefreshing(false);
+    }
+  }, [refreshing]);
   const onItemPress = _id => {
     setSelectedRental(_id);
     const selectedRental = rentalList.find(item => item._id === _id);
@@ -45,7 +55,7 @@ const ListRequestRentalScreen = ({
           label: 'Pick up location',
           value: selectedRental.pickupHub.address,
         },
-        { att: 'type', label: 'Type', value: 'Hiring request' },
+        { value: 'Waiting for hire' },
       ],
       avatar: selectedRental.customer.avatar,
       name: selectedRental.customer.fullName,
@@ -53,6 +63,7 @@ const ListRequestRentalScreen = ({
       onConfirm: () => {},
       onDecline: () => {},
     });
+    setRefreshing(true);
   };
 
   const renderItem = ({ item, index }) => (
@@ -61,6 +72,8 @@ const ListRequestRentalScreen = ({
 
   return (
     <FlatList
+      refreshing={refreshing}
+      onRefresh={() => setRefreshing(true)}
       data={rentalList}
       renderItem={renderItem}
       keyExtractor={(item, index) => index}
@@ -75,5 +88,5 @@ export default connect(
   state => ({
     rentalList: state.rental.rentals,
   }),
-  { setSelectedRental }
+  { setSelectedRental, getRentalList }
 )(ListRequestRentalScreen);

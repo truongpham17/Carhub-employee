@@ -3,6 +3,9 @@ import {
   GET_RENTAL_REQUEST,
   GET_RENTAL_SUCCESS,
   SET_SELECT_RENTAL,
+  UPDATE_RENTAL_ITEM_REQUEST,
+  UPDATE_RENTAL_ITEM_FAILURE,
+  UPDATE_RENTAL_ITEM_SUCCESS,
 } from '../constants/rental';
 
 const INITIAL_STATE = {
@@ -23,6 +26,12 @@ export default (state = INITIAL_STATE, action) => {
       return { ...state, loading: false };
     case SET_SELECT_RENTAL:
       return { ...state, selectedId: action.payload };
+    case UPDATE_RENTAL_ITEM_REQUEST:
+      return { ...state, loading: true };
+    case UPDATE_RENTAL_ITEM_SUCCESS:
+      return { ...state, loading: false };
+    case UPDATE_RENTAL_ITEM_FAILURE:
+      return { ...state, loading: false };
     default:
       return { ...state };
   }

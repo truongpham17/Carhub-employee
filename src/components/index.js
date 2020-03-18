@@ -15,8 +15,10 @@ import ViewContainer from './ViewContainer';
 import DatePicker from './DatePicker';
 import SearchMapInput from './SearchMapInput';
 import ButtonGroup from './ButtonGroup';
+import QRCodeGenModal from './QRCodeGenModal';
 
 export {
+  QRCodeGenModal,
   AppGradient,
   Avatar,
   Button,

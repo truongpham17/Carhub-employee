@@ -1,14 +1,21 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import { ViewContainer, ListItem, Button } from 'Components';
-import { NavigationType, RentalType } from 'types';
+import {
+  ViewContainer,
+  ListItem,
+  Button,
+  QRCodeGenModal,
+  ConfirmPopup,
+} from 'Components';
+// import { NavigationType, RentalType } from 'types';
 import { Avatar } from 'react-native-elements';
 import { textStyle } from 'Constants/textStyles';
 import { scaleVer, scaleHor } from 'Constants/dimensions';
 import colors from 'Constants/colors';
 
 import { connect } from 'react-redux';
-import moment from 'moment';
+import { updateRentalStatus } from '@redux/actions/rental';
+// import moment from 'moment';
 
 type PropsType = {
   navigation: {
@@ -24,9 +31,10 @@ type PropsType = {
     },
     goBack: () => void,
   },
+  updateRentalStatus: () => void,
 };
 
-const RentDetailScreen = ({ navigation }: PropsType) => {
+const RentDetailScreen = ({ navigation, updateRentalStatus }: PropsType) => {
   const {
     data,
     avatar,
@@ -36,12 +44,36 @@ const RentDetailScreen = ({ navigation }: PropsType) => {
     onDecline,
   } = navigation.state.params;
 
+  const [valueForQR, setValueForQR] = useState('');
+  const [generateNewQR, setGenerateNewQR] = useState(true);
+  const [qrCodeModalVisible, setQrCodeModalVisible] = useState(false);
+  const [popupVisible, setPopupVisible] = useState(false);
+
   const handleBackPress = () => {
     navigation.goBack();
+  };
+  const onCloseQrCodeModal = () => {
+    setQrCodeModalVisible(false);
+  };
+
+  const handleConfirmDecline = () => {
+    updateRentalStatus({
+      id: data.find(i => i.att === '_id').value,
+      status: 'DECLINED',
+    });
+    setPopupVisible(false);
+    navigation.popToTop();
+  };
+
+  const onDeclineComfirm = () => {
+    setPopupVisible(true);
   };
 
   const handleDeclineRequest = () => {};
 
+  const handleDelivery = () => {
+    setQrCodeModalVisible(true);
+  };
   const renderAction = () => {
     switch (type) {
       case 'accept-decline':
@@ -55,7 +87,6 @@ const RentDetailScreen = ({ navigation }: PropsType) => {
                 onPress={onDecline}
               />
             </View>
-
             <View style={{ flex: 1, marginStart: scaleHor(8) }}>
               <Button label="Accept" onPress={onConfirm} />
             </View>
@@ -68,7 +99,13 @@ const RentDetailScreen = ({ navigation }: PropsType) => {
               label="Decline"
               colorStart={colors.errorLight}
               colorEnd={colors.error}
-              onPress={onDecline}
+              onPress={onDeclineComfirm}
+              style={styles.button}
+            />
+            <Button
+              label="Delivery Car"
+              onPress={handleDelivery}
+              style={styles.button}
             />
           </View>
         );
@@ -124,6 +161,19 @@ const RentDetailScreen = ({ navigation }: PropsType) => {
             onPress={handleDeclineRequest}
           />
         </View> */}
+        <QRCodeGenModal
+          valueForQR={valueForQR}
+          visible={qrCodeModalVisible}
+          onClose={onCloseQrCodeModal}
+          setGenerateNewQR={setGenerateNewQR}
+        />
+        <ConfirmPopup
+          title="CONFIRM"
+          description="Would you like to decline this request?"
+          modalVisible={popupVisible}
+          onClose={() => setPopupVisible(false)}
+          onConfirm={handleConfirmDecline}
+        />
       </View>
     </ViewContainer>
   );
@@ -140,9 +190,17 @@ const styles = StyleSheet.create({
   buttonContainer: {
     marginVertical: scaleVer(16),
   },
+  button: {
+    marginVertical: scaleVer(5),
+  },
 });
 
-export default connect(state => ({
-  data: state.rental.rentals.find(item => item._id === state.rental.selectedId),
-  // isLoading: state.rentalsList.isLoading,
-}))(RentDetailScreen);
+export default connect(
+  state => ({
+    data: state.rental.rentals.find(
+      item => item._id === state.rental.selectedId
+    ),
+    // isLoading: state.rentalsList.isLoading,
+  }),
+  { updateRentalStatus }
+)(RentDetailScreen);
