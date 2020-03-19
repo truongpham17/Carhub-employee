@@ -1,18 +1,29 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import { scaleHor, scaleVer } from 'Constants/dimensions';
-import { LeaseType } from 'types';
+import { LeaseType, NavigationType } from 'types';
 import { Avatar, Button } from 'Components';
 import { textStyle } from 'Constants/textStyles';
 import colors from 'Constants/colors';
 import moment from 'moment';
 
+import { connect, useDispatch } from 'react-redux';
+
 type PropsType = {
   onItemPress: string => void,
   data: LeaseType,
+  navigation: NavigationType,
+  onAccept: () => void,
+  onDecline: () => void,
 };
 
-const RequestLeaseItem = ({ onItemPress, data }: PropsType) => {
+const RequestLeaseItem = ({
+  onItemPress,
+  data,
+  onAccept,
+  onDecline,
+}: PropsType) => {
+  const dispatch = useDispatch();
   const getDetail = () => {
     onItemPress(data._id);
     // goToDetail(item.value);
@@ -44,11 +55,12 @@ const RequestLeaseItem = ({ onItemPress, data }: PropsType) => {
             label="Decline"
             colorStart={colors.errorLight}
             colorEnd={colors.error}
+            onPress={onDecline}
           />
         </View>
 
         <View style={{ flex: 1, marginStart: scaleHor(8) }}>
-          <Button label="Accept" />
+          <Button label="Accept" onPress={onAccept} />
         </View>
       </View>
     </TouchableOpacity>

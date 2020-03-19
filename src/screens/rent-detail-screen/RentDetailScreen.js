@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, Alert } from 'react-native';
 import {
   ViewContainer,
   ListItem,
@@ -15,6 +15,8 @@ import colors from 'Constants/colors';
 
 import { connect } from 'react-redux';
 import { updateRentalStatus } from '@redux/actions/rental';
+import firebase from 'react-native-firebase';
+import { COMPLETED, CANCEL } from 'Constants/status';
 // import moment from 'moment';
 
 type PropsType = {
@@ -30,6 +32,8 @@ type PropsType = {
       },
     },
     goBack: () => void,
+    pop: () => void,
+    popToTop: () => void,
   },
   updateRentalStatus: () => void,
 };
@@ -48,6 +52,7 @@ const RentDetailScreen = ({ navigation, updateRentalStatus }: PropsType) => {
   const [generateNewQR, setGenerateNewQR] = useState(true);
   const [qrCodeModalVisible, setQrCodeModalVisible] = useState(false);
   const [popupVisible, setPopupVisible] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const handleBackPress = () => {
     navigation.goBack();
@@ -70,6 +75,35 @@ const RentDetailScreen = ({ navigation, updateRentalStatus }: PropsType) => {
   };
 
   const handleDeclineRequest = () => {};
+
+  const onSubmitTransaction = () => {
+    onConfirm();
+    setLoading(true);
+    const id = data.find(i => i.att === '_id').value;
+
+    firebase
+      .database()
+      .ref(`scanQRCode/${id}`)
+      .on('value', snapShot => {
+        switch (snapShot.val().status) {
+          case COMPLETED: {
+            setLoading(false);
+            Alert.alert('Success confirm transaction!');
+            navigation.pop();
+            break;
+          }
+          case CANCEL: {
+            setLoading(false);
+            Alert.alert('Cancel transaction');
+            navigation.pop();
+            break;
+          }
+
+          default:
+            console.log('error');
+        }
+      });
+  };
 
   const handleDelivery = () => {
     setQrCodeModalVisible(true);
@@ -102,17 +136,15 @@ const RentDetailScreen = ({ navigation, updateRentalStatus }: PropsType) => {
               onPress={onDeclineComfirm}
               style={styles.button}
             />
-            <Button
-              label="Delivery Car"
-              onPress={handleDelivery}
-              style={styles.button}
-            />
           </View>
         );
       case 'transaction':
         return (
           <View style={{ marginTop: scaleVer(8) }}>
-            <Button label="Confirm transaction" onPress={onConfirm} />
+            <Button
+              label="Confirm transaction"
+              onPress={() => onSubmitTransaction()}
+            />
           </View>
         );
       default:
@@ -126,6 +158,7 @@ const RentDetailScreen = ({ navigation, updateRentalStatus }: PropsType) => {
       haveBackHeader
       onBackPress={handleBackPress}
       scrollable
+      loading={loading}
     >
       <View style={{ flex: 1 }}>
         <View>

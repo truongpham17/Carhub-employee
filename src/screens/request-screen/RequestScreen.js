@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { ViewContainer, ButtonGroup } from 'Components';
 import ViewPager from '@react-native-community/viewpager';
-import { connect } from 'react-redux';
+import { connect, useDispatch } from 'react-redux';
 
 import { getRentalList } from '@redux/actions/rental';
 import { getLeaseList } from '@redux/actions/lease';
@@ -10,24 +10,23 @@ import { getLeaseList } from '@redux/actions/lease';
 import { NavigationType } from 'types';
 // import { dimension } from 'Constants';
 import { scaleHor, scaleVer } from 'Constants/dimensions';
+import { changeTransactionStatus } from 'Utils/database';
 import ListRequestRentalScreen from '../list-request-rental-screen/ListRequestRentalScreen';
 import ListRequestLeaseScreen from '../list-request-lease-screen/ListRequestLeaseScreen';
 
 type PropTypes = {
   navigation: NavigationType,
   getRentalList: () => void,
-  getLeaseList: () => void,
 };
 
-const RequestScreen = ({
-  navigation,
-  getRentalList,
-  getLeaseList,
-}: PropTypes) => {
+const RequestScreen = ({ navigation, getRentalList }: PropTypes) => {
+  const dispatch = useDispatch();
   useEffect(() => {
-    getRentalList();
-    getLeaseList();
+    // getRentalList();
+    // getLeaseList(dispatch)();
+    // changeTransactionStatus('123', 'hello friend');
   }, []);
+
   const [activeIndex, setActiveIndex] = useState(0);
   const viewPagerRef = useRef(null);
 
@@ -88,6 +87,6 @@ export default connect(
     loading: state.rental.loading,
     rentalList: state.rental.rentals,
   }),
-  { getRentalList, getLeaseList }
+  { getRentalList }
 )(RequestScreen);
 const styles = StyleSheet.create({});

@@ -1,10 +1,14 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, StyleSheet, FlatList } from 'react-native';
-import { ViewContainer } from 'Components';
-import { setSelectedLease } from '@redux/actions/lease';
+import {
+  setSelectedLease,
+  declineLeaseRequest,
+  acceptLeaseRequest,
+  getLeaseList,
+} from '@redux/actions/lease';
 import { LeaseType, NavigationType } from 'types';
 
-import { connect } from 'react-redux';
+import { connect, useDispatch } from 'react-redux';
 
 import moment from 'moment';
 import RequestLeaseItem from './RequestLeaseItem';
@@ -20,6 +24,30 @@ const ListRequestLeaseScreen = ({
   setSelectedLease,
   navigation,
 }: PropTypes) => {
+  const dispatch = useDispatch();
+  const [refresh, setRefresh] = useState(false);
+
+  const onConfirmItem = id => {
+    acceptLeaseRequest(dispatch)(id, {
+      onSuccess() {
+        navigation.navigate('RequestScreen');
+      },
+      onFailure() {
+        console.log('ERROR');
+      },
+    });
+  };
+
+  const onDeclineItem = id => {
+    declineLeaseRequest(dispatch)(id, {
+      onSuccess() {
+        navigation.navigate('RequestScreen');
+      },
+      onFailure() {
+        console.log('ERROR');
+      },
+    });
+  };
   const onItemPress = _id => {
     const selectedLease = leaseList.find(item => item._id === _id);
 
@@ -52,18 +80,38 @@ const ListRequestLeaseScreen = ({
       avatar: selectedLease.customer.avatar,
       name: selectedLease.customer.fullName,
       type: 'accept-decline',
-      onConfirm: () => {},
-      onDecline: () => {},
+      onConfirm: () => onConfirmItem(selectedLease._id),
+      onDecline: () => onDeclineItem(selectedLease._id),
     });
   };
+
+  const onRefresh = () => {
+    getLeaseList(dispatch)({
+      onSuccess() {
+        setRefresh(false);
+      },
+      onFailure() {
+        setRefresh(false);
+      },
+    });
+  };
+
   return (
     <FlatList
-      data={leaseList}
+      data={leaseList.filter(item => item.status === 'PENDING')}
       renderItem={({ item, index }) => (
-        <RequestLeaseItem data={item} onItemPress={onItemPress} />
+        <RequestLeaseItem
+          data={item}
+          onItemPress={onItemPress}
+          navigation={navigation}
+          onAccept={() => onConfirmItem(item._id)}
+          onDecline={() => onDeclineItem(item._id)}
+        />
       )}
       keyExtractor={(item, index) => item._id}
       showsVerticalScrollIndicator={false}
+      onRefresh={onRefresh}
+      refreshing={refresh}
     />
   );
 };

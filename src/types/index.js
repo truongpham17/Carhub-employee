@@ -144,4 +144,12 @@ export type LeaseType = {
   startDate: Date,
   endDate: Date,
   hub: HubType,
+  status:
+    | 'PENDING'
+    | 'ACCEPTED'
+    | 'DECLINED'
+    | 'AVAILABLE'
+    | 'HIRING'
+    | 'WAIT_TO_RETURN'
+    | 'PAST',
 };

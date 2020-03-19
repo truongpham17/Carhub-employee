@@ -20,6 +20,7 @@ export function setQRCodeInfo(info) {
 
 export async function getTransationInfo(data) {
   try {
+    console.log('data at qr code: ', data);
     const result = await query({ endpoint: `${data.type}/${data.id}` });
     if (result.status === STATUS.OK) {
       return { ...result.data, transactionType: data.type };
@@ -36,13 +37,17 @@ export function setTransactionInfo(data) {
   };
 }
 
-export function confirmTransaction({ id, type }, callback = INITIAL_CALLBACK) {
+export function confirmTransaction(
+  { id, type, employeeID },
+  callback = INITIAL_CALLBACK
+) {
   return async dispatch => {
     try {
       dispatch({ type: CONFIRM_TRANSACTION_REQUEST });
       const result = await query({
         endpoint: `${type}/transaction/${id}`,
         method: METHODS.post,
+        data: { employeeID },
       });
       if (result.status === STATUS.OK) {
         dispatch({ type: CONFIRM_TRANSACTION_SUCCESS, payload: result.data });

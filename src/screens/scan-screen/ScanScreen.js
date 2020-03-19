@@ -10,9 +10,15 @@ import BarcodeMask from 'react-native-barcode-mask';
 import { ViewContainer } from 'Components';
 import { RentalType, NavigationType, LeaseType } from 'types';
 import { scaleVer } from 'Constants/dimensions';
-import { connect } from 'react-redux';
+import { connect, useSelector } from 'react-redux';
 import moment from 'moment';
-import firebase from 'react-native-firebase';
+import {
+  WAITING_FOR_CONFIRM,
+  WAITING_FOR_USER_CONFIRM,
+  COMPLETED,
+  CANCEL,
+} from 'Constants/status';
+import { changeTransactionStatus } from 'Utils/database';
 
 type PropTypes = {
   setQRCodeInfo: () => void,
@@ -27,17 +33,17 @@ const ScanQrCodeScreen = ({
   confirmTransaction,
 }: PropTypes) => {
   const [barcode, setBarcode] = useState(null);
+  const userID = useSelector(state => state.user._id);
 
   const loadInfo = async data => {
     const transactionInfo = await getTransationInfo(data);
-    firebase
-      .database()
-      .ref(`scanQRCode/${transactionInfo._id}`)
-      .set({
-        _id: transactionInfo._id,
-        status: 'completed',
-      });
+
+    changeTransactionStatus(transactionInfo._id, WAITING_FOR_CONFIRM);
+
     setQRCodeInfo(transactionInfo);
+
+    console.log(transactionInfo);
+
     if (transactionInfo.transactionType === 'rental') {
       let type = '';
       const selectedRental: RentalType = { ...transactionInfo };
@@ -80,19 +86,11 @@ const ScanQrCodeScreen = ({
         name: selectedRental.customer.fullName,
         type,
         onConfirm: () => {
-          if (transactionInfo.transactionType === 'rental') {
-            confirmTransaction(
-              { id: selectedRental._id, type: 'rental' },
-              {
-                onSuccess() {
-                  navigation.pop();
-                  setTimeout(() => {
-                    Alert.alert('Success!', 'Complete transaction');
-                  }, 500);
-                },
-              }
-            );
-          }
+          changeTransactionStatus(
+            transactionInfo._id,
+            WAITING_FOR_USER_CONFIRM,
+            userID
+          );
         },
         onDecline: () => {},
       });
@@ -100,7 +98,7 @@ const ScanQrCodeScreen = ({
       const selectedLease: LeaseType = { ...transactionInfo };
       let type = 'none';
       if (
-        selectedLease.status === 'UPCOMING' ||
+        selectedLease.status === 'ACCEPTED' ||
         selectedLease.status === 'WAIT_TO_RETURN' ||
         selectedLease.status === 'AVAILABLE'
       ) {
@@ -135,8 +133,22 @@ const ScanQrCodeScreen = ({
         avatar: selectedLease.customer.avatar,
         name: selectedLease.customer.fullName,
         type,
-        onConfirm: () => {},
-        onDecline: () => {},
+        onConfirm: () => {
+          confirmTransaction(
+            { id: selectedLease._id, type: 'lease', employeeID: userID },
+            {
+              onSuccess() {
+                changeTransactionStatus(selectedLease._id, COMPLETED, userID);
+              },
+              onFailure() {
+                changeTransactionStatus(selectedLease._id, CANCEL, userID);
+              },
+            }
+          );
+        },
+        onDecline: () => {
+          changeTransactionStatus(selectedLease._id, CANCEL);
+        },
       });
     }
 
@@ -146,9 +158,9 @@ const ScanQrCodeScreen = ({
   const barcodeRecognize = barcodes => {
     if (!barcode) {
       setBarcode(barcodes.data);
-      setQRCodeInfo(JSON.parse(`${barcodes.data}`));
+      // setQRCodeInfo(JSON.parse(`${barcodes.data}`));
 
-      loadInfo({ ...JSON.parse(`${barcodes.data}`), type: 'rental' });
+      loadInfo({ ...JSON.parse(`${barcodes.data}`) });
     }
   };
   return (
