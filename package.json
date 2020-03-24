@@ -7,7 +7,7 @@
     "ios": "react-native run-ios",
     "test": "jest",
     "lint": "eslint .",
-    "start": "react-native start --port 9988",
+    "start": "react-native start --port 8899",
     "android:postinstall": "npx jetify",
     "debug": "open 'rndebugger://set-debugger-loc?host=localhost&port=9988'"
   },

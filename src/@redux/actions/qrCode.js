@@ -20,7 +20,7 @@ export function setQRCodeInfo(info) {
 
 export async function getTransationInfo(data) {
   try {
-    console.log('data at qr code: ', data);
+    // console.log('data at qr code: ', data);
     const result = await query({ endpoint: `${data.type}/${data.id}` });
     if (result.status === STATUS.OK) {
       return { ...result.data, transactionType: data.type };
