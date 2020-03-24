@@ -42,7 +42,7 @@ const ScanQrCodeScreen = ({
 
     setQRCodeInfo(transactionInfo);
 
-    console.log(transactionInfo);
+    // console.log(transactionInfo);
 
     if (transactionInfo.transactionType === 'rental') {
       let type = '';
@@ -86,11 +86,33 @@ const ScanQrCodeScreen = ({
         name: selectedRental.customer.fullName,
         type,
         onConfirm: () => {
-          changeTransactionStatus(
-            transactionInfo._id,
-            WAITING_FOR_USER_CONFIRM,
-            userID
-          );
+          if (selectedRental.status === 'UPCOMING') {
+            changeTransactionStatus(
+              transactionInfo._id,
+              WAITING_FOR_USER_CONFIRM,
+              userID
+            );
+          } else if (selectedRental.status === 'CURRENT') {
+            confirmTransaction(
+              {
+                id: transactionInfo._id,
+                type: 'rental',
+                userID,
+              },
+              {
+                onSuccess() {
+                  changeTransactionStatus(
+                    transactionInfo._id,
+                    COMPLETED,
+                    userID
+                  );
+                },
+                onFailure() {
+                  changeTransactionStatus(transactionInfo._id, CANCEL, userID);
+                },
+              }
+            );
+          }
         },
         onDecline: () => {},
       });
@@ -134,17 +156,25 @@ const ScanQrCodeScreen = ({
         name: selectedLease.customer.fullName,
         type,
         onConfirm: () => {
-          confirmTransaction(
-            { id: selectedLease._id, type: 'lease', employeeID: userID },
-            {
-              onSuccess() {
-                changeTransactionStatus(selectedLease._id, COMPLETED, userID);
-              },
-              onFailure() {
-                changeTransactionStatus(selectedLease._id, CANCEL, userID);
-              },
-            }
-          );
+          if (selectedLease.status === 'ACCEPTED') {
+            confirmTransaction(
+              { id: selectedLease._id, type: 'lease', employeeID: userID },
+              {
+                onSuccess() {
+                  changeTransactionStatus(selectedLease._id, COMPLETED, userID);
+                },
+                onFailure() {
+                  changeTransactionStatus(selectedLease._id, CANCEL, userID);
+                },
+              }
+            );
+          } else if (selectedLease.status === 'WAIT_TO_RETURN') {
+            changeTransactionStatus(
+              selectedLease._id,
+              WAITING_FOR_USER_CONFIRM,
+              userID
+            );
+          }
         },
         onDecline: () => {
           changeTransactionStatus(selectedLease._id, CANCEL);
