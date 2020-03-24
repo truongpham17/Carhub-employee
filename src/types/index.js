@@ -85,7 +85,9 @@ export type CarType = {
   description: String,
   odometer: Number,
   price: Number,
+  licensePlates: String,
   feature: String,
+  usingYear: number,
 };
 
 export type LicenseType = {
@@ -110,6 +112,7 @@ export type CarModel = {
   images: [String],
   description: String,
   price: number,
+  licensePlates: string,
   _id: String,
 };
 
@@ -135,6 +138,16 @@ export type RentalType = {
   pickoffHub: HubType,
   carModel: CarModel,
   car: CarType,
+};
+
+export type CarModelReport = {
+  carModel: CarModel,
+  hubQuantity: number,
+  currentQuantity: number,
+  customerQuantity: number,
+  otherHubQuantity: number,
+  upCommingLeaving: number,
+  upCommingReceive: number,
 };
 
 export type LeaseType = {

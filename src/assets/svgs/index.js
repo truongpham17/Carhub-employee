@@ -1,3 +1,4 @@
+import React from 'react';
 import RemoveIcon from './RemoveIcon';
 import Edit from './Edit';
 import ArrowReturn from './ArrowReturn';
@@ -9,6 +10,7 @@ import Calendar from './Calendar';
 import DownArrow from './DownArrow';
 import Error from './Error';
 import RightArrow from './RightArrow';
+import Filter from './Filter';
 
 export {
   RemoveIcon,
@@ -22,10 +24,13 @@ export {
   DownArrow,
   Error,
   RightArrow,
+  Filter,
 };
 
 export function getSvg(svg) {
   switch (svg) {
+    case 'filter':
+      return <Filter />;
     default:
       return null;
   }

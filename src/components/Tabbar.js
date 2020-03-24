@@ -13,7 +13,7 @@ import colors from 'Constants/colors';
 import { scaleVer } from 'Constants/dimensions';
 
 // navigation.state.routeName
-const TAB_NAME = ['RequestStack', 'ScanStack'];
+const TAB_NAME = ['RequestStack', 'ManageStack', 'ScanStack'];
 const routeConfig = [
   {
     icon: 'paper-plane',
@@ -21,28 +21,24 @@ const routeConfig = [
   },
   {
     icon: 'archive',
+    title: 'Manage',
+  },
+  {
+    icon: 'shopping-cart',
     title: 'Scan',
   },
-  // {
-  //   icon: 'shopping-cart',
-  //   title: 'History',
-  // },
-  // {
-  //   icon: 'user',
-  //   title: 'Profile',
-  // },
 ];
 
-class TabBar extends React.PureComponent {
-  renderTabIcon = ({ icon, title, onPress, color }) => (
-    <TouchableWithoutFeedback onPress={onPress} key={title}>
-      <View>
-        <Icon name={icon} type="entypo" size={20} color={color} />
-        <Text style={[textStyle.bodyText, { color }]}>{title}</Text>
-      </View>
-    </TouchableWithoutFeedback>
-  );
+const TabIcon = ({ icon, title, onPress, color }) => (
+  <TouchableWithoutFeedback onPress={onPress} key={title}>
+    <View>
+      <Icon name={icon} type="entypo" size={20} color={color} />
+      <Text style={[textStyle.bodyText, { color }]}>{title}</Text>
+    </View>
+  </TouchableWithoutFeedback>
+);
 
+class TabBar extends React.PureComponent {
   render() {
     const { navigation } = this.props;
     const { index } = navigation.state;
@@ -60,14 +56,15 @@ class TabBar extends React.PureComponent {
         }}
       >
         <View style={styles.containerStyle}>
-          {routeConfig.map((item, idx) =>
-            this.renderTabIcon({
-              icon: item.icon,
-              title: item.title,
-              onPress: () => navigation.navigate(TAB_NAME[idx]),
-              color: colorArr[idx],
-            })
-          )}
+          {routeConfig.map((item, idx) => (
+            <TabIcon
+              icon={item.icon}
+              title={item.title}
+              onPress={() => navigation.navigate(TAB_NAME[idx])}
+              color={colorArr[idx]}
+              key={idx}
+            />
+          ))}
         </View>
       </SafeAreaView>
 
