@@ -7,7 +7,7 @@ import {
   confirmTransaction,
 } from '@redux/actions/qrCode';
 import BarcodeMask from 'react-native-barcode-mask';
-import { ViewContainer } from 'Components';
+import { ViewContainer, ConfirmPopup } from 'Components';
 import { RentalType, NavigationType, LeaseType } from 'types';
 import { scaleVer } from 'Constants/dimensions';
 import { connect, useSelector } from 'react-redux';
@@ -19,6 +19,7 @@ import {
   CANCEL,
 } from 'Constants/status';
 import { changeTransactionStatus } from 'Utils/database';
+import { getRentalData, getLeaseData } from './utils';
 
 type PropTypes = {
   setQRCodeInfo: () => void,
@@ -28,12 +29,88 @@ type PropTypes = {
 };
 const ScanQrCodeScreen = ({
   setQRCodeInfo,
-  transactionData,
   navigation,
   confirmTransaction,
 }: PropTypes) => {
   const [barcode, setBarcode] = useState(null);
   const userID = useSelector(state => state.user._id);
+  const info = useSelector(state => state.qrCode.info) || {
+    carModel: {},
+    car: {},
+  };
+  const [returnVisible, setReturnVisible] = useState(false);
+
+  const onConfirmReceiveCar = () => {
+    setReturnVisible(false);
+    confirmTransaction(
+      {
+        id: info._id,
+        type: info.transactionType,
+        toStatus: 'PAST',
+      },
+      {
+        onSuccess() {
+          changeTransactionStatus(info._id, COMPLETED, userID);
+          navigation.navigate('RequestScreen');
+        },
+        onFailure() {
+          Alert.alert('Something went wrong, please try again!');
+          changeTransactionStatus(info._id, CANCEL, userID);
+        },
+      }
+    );
+  };
+
+  const onConfirmTransaction = (transactionInfo, type, status) => {
+    if (type === 'rental') {
+      switch (status) {
+        case 'UPCOMING':
+          navigation.navigate('ScanCarScreen', {
+            onSuccess(car) {
+              navigation.navigate('RequestScreen');
+              changeTransactionStatus(
+                transactionInfo._id,
+                WAITING_FOR_USER_CONFIRM,
+                car
+              );
+            },
+          });
+          break;
+        case 'CURRENT':
+          setReturnVisible(true);
+
+          break;
+        default:
+      }
+    } else if (type === 'lease') {
+      switch (status) {
+        case 'ACCEPTED':
+          confirmTransaction(
+            { id: transactionInfo._id, type: 'lease', employeeID: userID },
+            {
+              onSuccess() {
+                changeTransactionStatus(transactionInfo._id, COMPLETED, userID);
+              },
+              onFailure() {
+                changeTransactionStatus(transactionInfo._id, CANCEL, userID);
+              },
+            }
+          );
+          break;
+        case 'WAIT_TO_RETURN':
+          changeTransactionStatus(
+            transactionInfo._id,
+            WAITING_FOR_USER_CONFIRM,
+            userID
+          );
+          break;
+        default:
+      }
+    }
+  };
+
+  const TRANSACTION_RENTAL = ['UPCOMING', 'CURRENT'];
+  const TRANSACTION_LEASE = ['ACCEPTED', 'WAIT_TO_RETURN', 'AVAILABLE'];
 
   const loadInfo = async data => {
     const transactionInfo = await getTransationInfo(data);
@@ -42,140 +119,30 @@ const ScanQrCodeScreen = ({
 
     setQRCodeInfo(transactionInfo);
 
-    // console.log(transactionInfo);
+    const type = transactionInfo.transactionType;
 
     if (transactionInfo.transactionType === 'rental') {
-      let type = '';
+      let actionType = 'none';
       const selectedRental: RentalType = { ...transactionInfo };
-      if (
-        selectedRental.status === 'UPCOMING' ||
-        selectedRental.status === 'CURRENT'
-      ) {
-        type = 'transaction';
-      } else {
-        type = 'none';
+      if (TRANSACTION_RENTAL.includes(selectedRental.status)) {
+        actionType = 'transaction';
       }
-
       navigation.navigate('RentDetailScreen', {
-        data: [
-          { att: '_id', label: 'ID', value: selectedRental._id },
-          {
-            att: 'startDate',
-            label: 'From date',
-            value: moment(selectedRental.startDate).format('DD/MMM/YYYY'),
-          },
-          {
-            att: 'endDate',
-            label: 'To date',
-            value: moment(selectedRental.endDate).format('DD/MMM/YYYY'),
-          },
-          {
-            att: 'carId',
-            label: 'Car model',
-            value: selectedRental.carModel.name,
-          },
-          { att: 'cost', label: 'Cost', value: selectedRental.totalCost },
-          {
-            att: 'pickupLocation',
-            label: 'Pick up location',
-            value: selectedRental.pickupHub.address,
-          },
-          { att: 'type', label: 'Type', value: 'Hiring request' },
-        ],
-        avatar: selectedRental.customer.avatar,
-        name: selectedRental.customer.fullName,
-        type,
-        onConfirm: () => {
-          if (selectedRental.status === 'UPCOMING') {
-            changeTransactionStatus(
-              transactionInfo._id,
-              WAITING_FOR_USER_CONFIRM,
-              userID
-            );
-          } else if (selectedRental.status === 'CURRENT') {
-            confirmTransaction(
-              {
-                id: transactionInfo._id,
-                type: 'rental',
-                userID,
-              },
-              {
-                onSuccess() {
-                  changeTransactionStatus(
-                    transactionInfo._id,
-                    COMPLETED,
-                    userID
-                  );
-                },
-                onFailure() {
-                  changeTransactionStatus(transactionInfo._id, CANCEL, userID);
-                },
-              }
-            );
-          }
-        },
+        ...getRentalData(selectedRental, actionType),
+        onConfirm: () =>
+          onConfirmTransaction(selectedRental, type, selectedRental.status),
         onDecline: () => {},
       });
     } else {
       const selectedLease: LeaseType = { ...transactionInfo };
-      let type = 'none';
-      if (
-        selectedLease.status === 'ACCEPTED' ||
-        selectedLease.status === 'WAIT_TO_RETURN' ||
-        selectedLease.status === 'AVAILABLE'
-      ) {
-        type = 'transaction';
+      let actionType = 'none';
+      if (TRANSACTION_LEASE.includes(selectedLease.status)) {
+        actionType = 'transaction';
       }
       navigation.navigate('RentDetailScreen', {
-        data: [
-          { att: '_id', label: 'ID', value: selectedLease._id },
-          {
-            att: 'startDate',
-            label: 'From date',
-            value: moment(selectedLease.startDate).format('DD/MMM/YYYY'),
-          },
-          {
-            att: 'endDate',
-            label: 'To date',
-            value: moment(selectedLease.endDate).format('DD/MMM/YYYY'),
-          },
-          {
-            att: 'carId',
-            label: 'Car model',
-            value: selectedLease.car.carModel.name,
-          },
-          // { att: 'cost', label: 'Cost', value: selectedLease.totalCost },
-          {
-            att: 'pickupLocation',
-            label: 'Hub location',
-            value: selectedLease.hub.address,
-          },
-          { att: 'type', label: 'Type', value: 'Lease request' },
-        ],
-        avatar: selectedLease.customer.avatar,
-        name: selectedLease.customer.fullName,
-        type,
-        onConfirm: () => {
-          if (selectedLease.status === 'ACCEPTED') {
-            confirmTransaction(
-              { id: selectedLease._id, type: 'lease', employeeID: userID },
-              {
-                onSuccess() {
-                  changeTransactionStatus(selectedLease._id, COMPLETED, userID);
-                },
-                onFailure() {
-                  changeTransactionStatus(selectedLease._id, CANCEL, userID);
-                },
-              }
-            );
-          } else if (selectedLease.status === 'WAIT_TO_RETURN') {
-            changeTransactionStatus(
-              selectedLease._id,
-              WAITING_FOR_USER_CONFIRM,
-              userID
-            );
-          }
-        },
+        ...getLeaseData(selectedLease, actionType),
+        onConfirm: () =>
+          onConfirmTransaction(selectedLease, type, selectedLease.status),
         onDecline: () => {
           changeTransactionStatus(selectedLease._id, CANCEL);
         },
@@ -207,6 +174,16 @@ const ScanQrCodeScreen = ({
       >
         <BarcodeMask />
       </RNCamera>
+
+      <ConfirmPopup
+        title="Confirm receive car"
+        description={`Are you sure to confirm receiving ${
+          info.carModel.name
+        }? with license plates ${info.car ? info.car.licensePlates : ''}?`}
+        modalVisible={returnVisible}
+        onClose={() => setReturnVisible(false)}
+        onConfirm={() => onConfirmReceiveCar()}
+      />
     </View>
   );
 };

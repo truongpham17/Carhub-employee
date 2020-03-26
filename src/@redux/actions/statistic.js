@@ -15,6 +15,9 @@ import {
   REMOVE_CAR_REQUEST,
   REMOVE_CAR_SUCCESS,
   SET_SELECTED_CAR,
+  GET_CAR_FAILURE,
+  GET_CAR_REQUEST,
+  GET_CAR_SUCCESS,
 } from '../constants/statistic';
 
 export const getHubCarList = dispatch => async (
@@ -149,6 +152,28 @@ export const removeCar = dispatch => async (
     }
   } catch (error) {
     dispatch({ type: REMOVE_CAR_FAILURE, payload: error });
+    callback.onFailure();
+  }
+};
+
+export const getCar = dispatch => async (id, callback = INITIAL_CALLBACK) => {
+  try {
+    dispatch({ type: GET_CAR_REQUEST });
+    const result = await query({
+      endpoint: `car/${id}`,
+    });
+    if (result.status === STATUS.OK) {
+      console.log(result.status);
+      console.log(result.data);
+      dispatch({ type: GET_CAR_SUCCESS, payload: result.data });
+      callback.onSuccess(result.data);
+    } else {
+      dispatch({ type: GET_CAR_FAILURE });
+      callback.onFailure();
+    }
+  } catch (error) {
+    console.log(error);
+    dispatch({ type: GET_CAR_FAILURE, payload: error });
     callback.onFailure();
   }
 };

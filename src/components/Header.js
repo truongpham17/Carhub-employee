@@ -4,8 +4,6 @@ import {
   StyleSheet,
   TouchableOpacity,
   Text,
-  StyleProp,
-  ViewStyle,
   SafeAreaView,
 } from 'react-native';
 import { textStyleObject } from 'Constants/textStyles';
@@ -24,7 +22,7 @@ type PropTypes = {
   animation: 'leftToRight' | 'normal',
   backType: 'back' | 'exit',
   onBackPress: () => void,
-  style: StyleProp<ViewStyle>,
+  style: {},
 };
 
 const BackTitle = ({
@@ -58,15 +56,16 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     alignSelf: 'stretch',
-    marginBottom: scaleVer(32),
-    // backgroundColor: 'red',
+    paddingBottom: scaleVer(32),
   },
   arrow: {
     position: 'absolute',
     left: 0,
     top: 0,
-    bottom: 0,
+    bottom: 12,
+    // width: 32,
     justifyContent: 'center',
+    alignItems: 'center',
   },
   rightComponent: {
     position: 'absolute',

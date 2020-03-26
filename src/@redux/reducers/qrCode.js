@@ -7,7 +7,7 @@ import {
 } from '@redux/constants/qrCode';
 
 const INITIAL_STATE = {
-  info: {},
+  info: null,
   transactionInfo: {},
   loading: false,
 };

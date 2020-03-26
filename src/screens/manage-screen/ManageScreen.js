@@ -4,6 +4,7 @@ import { ViewContainer, ListItem } from 'Components';
 import { getHubCarList, setSelectedCarModel } from '@redux/actions/statistic';
 import { useDispatch, useSelector } from 'react-redux';
 import { NavigationType, CarModelReport } from 'types';
+import { changeTransactionStatus } from 'Utils/database';
 import ManageItem from './ManageItem';
 
 type PropTypes = {
@@ -18,6 +19,7 @@ const ManageScreen = ({ navigation }: PropTypes) => {
   const loading = useSelector(state => state.statistic.loading);
   useEffect(() => {
     getHubCarList(dispatch)();
+    // changeTransactionStatus('fdsafsda', 'hello');
   }, []);
   const onBackPress = () => {
     navigation.pop();

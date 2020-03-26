@@ -78,31 +78,30 @@ const RentDetailScreen = ({ navigation, updateRentalStatus }: PropsType) => {
 
   const onSubmitTransaction = () => {
     onConfirm();
-    setLoading(true);
-    const id = data.find(i => i.att === '_id').value;
+    // const id = data.find(i => i.att === '_id').value;
 
-    firebase
-      .database()
-      .ref(`scanQRCode/${id}`)
-      .on('value', snapShot => {
-        switch (snapShot.val().status) {
-          case COMPLETED: {
-            setLoading(false);
-            Alert.alert('Success confirm transaction!');
-            navigation.pop();
-            break;
-          }
-          case CANCEL: {
-            setLoading(false);
-            Alert.alert('Cancel transaction');
-            navigation.pop();
-            break;
-          }
+    // firebase
+    //   .database()
+    //   .ref(`scanQRCode/${id}`)
+    //   .on('value', snapShot => {
+    //     switch (snapShot.val().status) {
+    //       case COMPLETED: {
+    //         setLoading(false);
+    //         Alert.alert('Success confirm transaction!');
+    //         navigation.pop();
+    //         break;
+    //       }
+    //       case CANCEL: {
+    //         setLoading(false);
+    //         Alert.alert('Cancel transaction');
+    //         navigation.pop();
+    //         break;
+    //       }
 
-          default:
-            console.log('error');
-        }
-      });
+    //       default:
+    //         console.log('error');
+    //     }
+    //   });
   };
 
   const handleDelivery = () => {
@@ -112,7 +111,7 @@ const RentDetailScreen = ({ navigation, updateRentalStatus }: PropsType) => {
     switch (type) {
       case 'accept-decline':
         return (
-          <View style={{ flexDirection: 'row', marginTop: scaleVer(8) }}>
+          <View style={{ flexDirection: 'row', marginVertical: scaleVer(8) }}>
             <View style={{ flex: 1, marginEnd: scaleHor(8) }}>
               <Button
                 label="Decline"
@@ -128,7 +127,7 @@ const RentDetailScreen = ({ navigation, updateRentalStatus }: PropsType) => {
         );
       case 'decline':
         return (
-          <View style={{ marginTop: scaleVer(8) }}>
+          <View style={{ marginVertical: scaleVer(8) }}>
             <Button
               label="Decline"
               colorStart={colors.errorLight}
@@ -140,7 +139,7 @@ const RentDetailScreen = ({ navigation, updateRentalStatus }: PropsType) => {
         );
       case 'transaction':
         return (
-          <View style={{ marginTop: scaleVer(8) }}>
+          <View style={{ marginVertical: scaleVer(8) }}>
             <Button
               label="Confirm transaction"
               onPress={() => onSubmitTransaction()}
@@ -194,20 +193,21 @@ const RentDetailScreen = ({ navigation, updateRentalStatus }: PropsType) => {
             onPress={handleDeclineRequest}
           />
         </View> */}
-        <QRCodeGenModal
-          valueForQR={valueForQR}
-          visible={qrCodeModalVisible}
-          onClose={onCloseQrCodeModal}
-          setGenerateNewQR={setGenerateNewQR}
-        />
-        <ConfirmPopup
-          title="CONFIRM"
-          description="Would you like to decline this request?"
-          modalVisible={popupVisible}
-          onClose={() => setPopupVisible(false)}
-          onConfirm={handleConfirmDecline}
-        />
       </View>
+
+      <QRCodeGenModal
+        valueForQR={valueForQR}
+        visible={qrCodeModalVisible}
+        onClose={onCloseQrCodeModal}
+        setGenerateNewQR={setGenerateNewQR}
+      />
+      <ConfirmPopup
+        title="CONFIRM"
+        description="Would you like to decline this request?"
+        modalVisible={popupVisible}
+        onClose={() => setPopupVisible(false)}
+        onConfirm={handleConfirmDecline}
+      />
     </ViewContainer>
   );
 };

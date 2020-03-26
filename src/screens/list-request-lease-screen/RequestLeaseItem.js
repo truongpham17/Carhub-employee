@@ -56,11 +56,16 @@ const RequestLeaseItem = ({
             colorStart={colors.errorLight}
             colorEnd={colors.error}
             onPress={onDecline}
+            style={{ height: 40, borderRadius: 20 }}
           />
         </View>
 
         <View style={{ flex: 1, marginStart: scaleHor(8) }}>
-          <Button label="Accept" onPress={onAccept} />
+          <Button
+            label="Accept"
+            onPress={onAccept}
+            style={{ height: 40, borderRadius: 20 }}
+          />
         </View>
       </View>
     </TouchableOpacity>

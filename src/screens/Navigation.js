@@ -13,23 +13,16 @@ import ManageScreen from './manage-screen/ManageScreen';
 import CarModelDetail from './carmodel-detail/CarModelDetailScreen';
 import CarDetailScreen from './car-detail-screen/CarDetailScreen';
 import EditCarScreen from './edit-car-screen/EditCarScreen';
+import ScanCarScreen from './scan-car-screen/ScanCarScreen';
 
 const RequestStack = createStackNavigator(
   {
     RequestScreen,
     RentDetailScreen,
+    ScanScreen,
+    ScanCarScreen,
   },
   { headerMode: 'none' }
-);
-
-const ScanStack = createStackNavigator(
-  {
-    ScanScreen,
-    RentDetailScreen,
-  },
-  {
-    headerMode: 'none',
-  }
 );
 
 const ManageStack = createStackNavigator(
@@ -48,7 +41,6 @@ const MainApp = createBottomTabNavigator(
   {
     RequestStack,
     ManageStack,
-    ScanStack,
   },
   {
     tabBarComponent: Tabbar,

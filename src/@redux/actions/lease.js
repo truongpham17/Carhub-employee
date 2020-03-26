@@ -64,7 +64,7 @@ export const updateLeaseStatus = (
 };
 
 export const declineLeaseRequest = dispatch => async (
-  id,
+  { id, message },
   callback = INITIAL_CALLBACK
 ) => {
   try {
@@ -74,7 +74,7 @@ export const declineLeaseRequest = dispatch => async (
     const result = await query({
       method: METHODS.patch,
       endpoint: `${ENDPOINTS.lease}/${id}`,
-      data: { status: 'DECLINED' },
+      data: { status: 'DECLINED', message },
     });
     if (result.status === 200) {
       dispatch({ type: DECLINE_LEASE_SUCCESS, payload: result.data });

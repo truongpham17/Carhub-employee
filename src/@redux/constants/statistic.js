@@ -17,3 +17,7 @@ export const UPDATE_CAR_FAILURE = 'update-car-failure';
 export const REMOVE_CAR_REQUEST = 'remove-car-request';
 export const REMOVE_CAR_SUCCESS = 'remove-car-success';
 export const REMOVE_CAR_FAILURE = 'remove-car-failure';
+
+export const GET_CAR_REQUEST = 'get-car-request';
+export const GET_CAR_SUCCESS = 'get-car-success';
+export const GET_CAR_FAILURE = 'get-car-failure';

@@ -16,6 +16,7 @@ import DatePicker from './DatePicker';
 import SearchMapInput from './SearchMapInput';
 import ButtonGroup from './ButtonGroup';
 import QRCodeGenModal from './QRCodeGenModal';
+import ModalInput from './ModalInput';
 
 export {
   QRCodeGenModal,
@@ -36,4 +37,5 @@ export {
   DatePicker,
   SearchMapInput,
   ButtonGroup,
+  ModalInput,
 };

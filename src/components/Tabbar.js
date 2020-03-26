@@ -13,7 +13,7 @@ import colors from 'Constants/colors';
 import { scaleVer } from 'Constants/dimensions';
 
 // navigation.state.routeName
-const TAB_NAME = ['RequestStack', 'ManageStack', 'ScanStack'];
+const TAB_NAME = ['RequestStack', 'ManageStack'];
 const routeConfig = [
   {
     icon: 'paper-plane',
@@ -22,10 +22,6 @@ const routeConfig = [
   {
     icon: 'archive',
     title: 'Manage',
-  },
-  {
-    icon: 'shopping-cart',
-    title: 'Scan',
   },
 ];
 

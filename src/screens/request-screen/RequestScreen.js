@@ -53,6 +53,9 @@ const RequestScreen = ({ navigation, getRentalList }: PropTypes) => {
       title="Request List"
       onBackPress={onBackPress}
       haveBack={false}
+      haveRight
+      rightIcon="scan"
+      onRightPress={() => navigation.navigate('ScanScreen')}
     >
       <ButtonGroup
         // theme={theme}

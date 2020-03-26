@@ -11,6 +11,7 @@ import DownArrow from './DownArrow';
 import Error from './Error';
 import RightArrow from './RightArrow';
 import Filter from './Filter';
+import ScanIcon from './ScanIcon';
 
 export {
   RemoveIcon,
@@ -31,6 +32,8 @@ export function getSvg(svg) {
   switch (svg) {
     case 'filter':
       return <Filter />;
+    case 'scan':
+      return <ScanIcon />;
     default:
       return null;
   }

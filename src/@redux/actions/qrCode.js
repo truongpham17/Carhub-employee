@@ -38,7 +38,7 @@ export function setTransactionInfo(data) {
 }
 
 export function confirmTransaction(
-  { id, type, employeeID },
+  { id, type, toStatus },
   callback = INITIAL_CALLBACK
 ) {
   return async dispatch => {
@@ -47,7 +47,7 @@ export function confirmTransaction(
       const result = await query({
         endpoint: `${type}/transaction/${id}`,
         method: METHODS.post,
-        data: { employeeID },
+        data: { toStatus },
       });
       if (result.status === STATUS.OK) {
         dispatch({ type: CONFIRM_TRANSACTION_SUCCESS, payload: result.data });
