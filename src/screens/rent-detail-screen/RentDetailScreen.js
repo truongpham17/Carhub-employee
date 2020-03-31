@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, Alert } from 'react-native';
+import DialogInput from 'react-native-dialog-input';
 import {
   ViewContainer,
   ListItem,
@@ -53,6 +54,7 @@ const RentDetailScreen = ({ navigation, updateRentalStatus }: PropsType) => {
   const [qrCodeModalVisible, setQrCodeModalVisible] = useState(false);
   const [popupVisible, setPopupVisible] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [isDialogVisible, setIsDialogVisible] = useState(false);
 
   const handleBackPress = () => {
     navigation.goBack();
@@ -61,17 +63,18 @@ const RentDetailScreen = ({ navigation, updateRentalStatus }: PropsType) => {
     setQrCodeModalVisible(false);
   };
 
-  const handleConfirmDecline = () => {
+  const handleConfirmDecline = note => {
     updateRentalStatus({
       id: data.find(i => i.att === '_id').value,
       status: 'DECLINED',
+      note,
     });
-    setPopupVisible(false);
     navigation.popToTop();
   };
 
   const onDeclineComfirm = () => {
-    setPopupVisible(true);
+    // setPopupVisible(true);
+    setIsDialogVisible(true);
   };
 
   const handleDeclineRequest = () => {};
@@ -208,6 +211,18 @@ const RentDetailScreen = ({ navigation, updateRentalStatus }: PropsType) => {
         onClose={() => setPopupVisible(false)}
         onConfirm={handleConfirmDecline}
       />
+      <DialogInput
+        isDialogVisible={isDialogVisible}
+        title="Decline customer's request!"
+        // message="Message for DialogInput #1"
+        hintInput="Input your reason"
+        submitInput={inputText => {
+          handleConfirmDecline(inputText);
+        }}
+        closeDialog={() => {
+          setIsDialogVisible(false);
+        }}
+      ></DialogInput>
     </ViewContainer>
   );
 };

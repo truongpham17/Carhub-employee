@@ -34,7 +34,7 @@ export function setSelectedRental(_id) {
 }
 
 export const updateRentalStatus = (
-  { id, status },
+  { id, status, note },
   callback = INITIAL_CALLBACK
 ) => async dispatch => {
   try {
@@ -44,7 +44,7 @@ export const updateRentalStatus = (
     const result = await query({
       method: METHODS.patch,
       endpoint: `${ENDPOINTS.rental}/${id}`,
-      data: { status },
+      data: { status, note },
     });
     if (result.status === 200) {
       dispatch({ type: UPDATE_RENTAL_ITEM_SUCCESS, payload: result.data });

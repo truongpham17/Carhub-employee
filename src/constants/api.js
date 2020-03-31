@@ -4,8 +4,13 @@
 // truong
 // export const API_URL = 'http://192.168.1.106:5068/';
 
+
+// dat
+export const API_URL = 'http://192.168.1.190:5068/';
+=======
 // cuong
 export const API_URL = 'http://192.168.1.63:5068/';
+
 /**
  * @production
  */
