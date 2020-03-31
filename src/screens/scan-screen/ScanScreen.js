@@ -114,6 +114,7 @@ const ScanQrCodeScreen = ({
 
   const loadInfo = async data => {
     const transactionInfo = await getTransationInfo(data);
+    console.log(transactionInfo);
 
     changeTransactionStatus(transactionInfo._id, WAITING_FOR_CONFIRM);
 
@@ -155,9 +156,15 @@ const ScanQrCodeScreen = ({
   const barcodeRecognize = barcodes => {
     if (!barcode) {
       setBarcode(barcodes.data);
+      const data = JSON.parse(`${barcodes.data}`);
+      console.log('Data QR', data.expired);
+      if (data.expired <= Date.now()) {
+        alert('QR Code is expired!');
+        setBarcode(null);
+        return;
+      }
       // setQRCodeInfo(JSON.parse(`${barcodes.data}`));
-
-      loadInfo({ ...JSON.parse(`${barcodes.data}`) });
+      loadInfo({ ...data });
     }
   };
   return (
