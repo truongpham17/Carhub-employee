@@ -14,6 +14,7 @@ import { NavigationType, CarType } from 'types';
 import { updateCar, removeCar, getHubCarList } from '@redux/actions/statistic';
 import colors from 'Constants/colors';
 import { scaleHor, scaleVer } from 'Constants/dimensions';
+import moment from 'moment';
 
 import EditCar from './EditCar';
 
@@ -124,11 +125,11 @@ const CarDetailScreen = ({ navigation }: PropTypes) => {
           />
         </View>
 
-        <View style={{ flex: 1, marginStart: scaleHor(8) }}>
+        {/* <View style={{ flex: 1, marginStart: scaleHor(8) }}>
           <Button label="Edit" onPress={() => setModalVisible(true)} />
-        </View>
+        </View> */}
       </View>
-      <ModalContainer
+      {/* <ModalContainer
         modalVisible={modalVisible}
         onClose={() => setModalVisible(false)}
       >
@@ -139,7 +140,7 @@ const CarDetailScreen = ({ navigation }: PropTypes) => {
           }}
           onSave={handleEditCar}
         />
-      </ModalContainer>
+      </ModalContainer> */}
 
       <ConfirmPopup
         title="Confirm remove car"
