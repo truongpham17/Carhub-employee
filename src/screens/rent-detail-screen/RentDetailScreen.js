@@ -1,21 +1,14 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, Alert } from 'react-native';
-import {
-  ViewContainer,
-  ListItem,
-  Button,
-  QRCodeGenModal,
-  ConfirmPopup,
-} from 'Components';
+import React from 'react';
+import { View, Text, StyleSheet } from 'react-native';
+import { ViewContainer, ListItem, Button } from 'Components';
 // import { NavigationType, RentalType } from 'types';
 import { Avatar } from 'react-native-elements';
 import { textStyle } from 'Constants/textStyles';
 import { scaleVer, scaleHor } from 'Constants/dimensions';
 import colors from 'Constants/colors';
 
-import { connect, useSelector, useDispatch } from 'react-redux';
+import { connect, useSelector } from 'react-redux';
 import { updateRentalStatus } from '@redux/actions/rental';
-import { setPopUpData } from '@redux/actions/app';
 // import moment from 'moment';
 
 type PropsType = {
@@ -34,10 +27,9 @@ type PropsType = {
     pop: () => void,
     popToTop: () => void,
   },
-  updateRentalStatus: () => void,
 };
 
-const RentDetailScreen = ({ navigation, updateRentalStatus }: PropsType) => {
+const RentDetailScreen = ({ navigation }: PropsType) => {
   const {
     data,
     avatar,
@@ -47,22 +39,10 @@ const RentDetailScreen = ({ navigation, updateRentalStatus }: PropsType) => {
     onDecline,
   } = navigation.state.params;
 
-  const dispatch = useDispatch();
   const loading = useSelector(state => state.lease.loading);
-
-  const [valueForQR, setValueForQR] = useState('');
-  const [generateNewQR, setGenerateNewQR] = useState(true);
-  const [qrCodeModalVisible, setQrCodeModalVisible] = useState(false);
 
   const handleBackPress = () => {
     navigation.goBack();
-  };
-  const onCloseQrCodeModal = () => {
-    setQrCodeModalVisible(false);
-  };
-
-  const onSubmitTransaction = () => {
-    onConfirm();
   };
 
   const renderAction = () => {
@@ -98,7 +78,7 @@ const RentDetailScreen = ({ navigation, updateRentalStatus }: PropsType) => {
       case 'transaction':
         return (
           <View style={{ marginVertical: scaleVer(8) }}>
-            <Button label="Confirm transaction" onPress={onSubmitTransaction} />
+            <Button label="Confirm transaction" onPress={onConfirm} />
           </View>
         );
       default:
@@ -141,20 +121,6 @@ const RentDetailScreen = ({ navigation, updateRentalStatus }: PropsType) => {
         </View>
         {renderAction()}
       </View>
-
-      <QRCodeGenModal
-        valueForQR={valueForQR}
-        visible={qrCodeModalVisible}
-        onClose={onCloseQrCodeModal}
-        setGenerateNewQR={setGenerateNewQR}
-      />
-      {/* <ConfirmPopup
-        title="Decline request"
-        description="Are you sure to decline this request?"
-        modalVisible={popupVisible}
-        onClose={() => setPopupVisible(false)}
-        onConfirm={handleConfirmDecline}
-      /> */}
     </ViewContainer>
   );
 };

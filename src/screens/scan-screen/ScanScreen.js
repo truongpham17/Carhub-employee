@@ -18,6 +18,7 @@ const ScanQrCodeScreen = ({ navigation }: PropTypes) => {
 
   const loadInfo = async data => {
     const transactionInfo = await getTransationInfo(data);
+    console.log(transactionInfo);
 
     if (!transactionInfo) {
       setPopUpData(dispatch)({

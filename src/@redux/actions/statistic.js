@@ -18,6 +18,9 @@ import {
   GET_CAR_FAILURE,
   GET_CAR_REQUEST,
   GET_CAR_SUCCESS,
+  CHECK_AVAILABLE_CAR_REQUEST,
+  CHECK_AVAILABLE_CAR_SUCCESS,
+  CHECK_AVAILABLE_CAR_FAILURE,
 } from '../constants/statistic';
 
 export const getHubCarList = dispatch => async (
@@ -174,6 +177,27 @@ export const getCar = dispatch => async (id, callback = INITIAL_CALLBACK) => {
   } catch (error) {
     console.log(error);
     dispatch({ type: GET_CAR_FAILURE, payload: error });
+    callback.onFailure();
+  }
+};
+
+export const checkAvailableCar = dispatch => async (
+  id,
+  callback = INITIAL_CALLBACK
+) => {
+  try {
+    dispatch({ type: CHECK_AVAILABLE_CAR_REQUEST });
+    const result = await query({ endpoint: `car/checkAvailableCar/${id}` });
+    if (result.status === STATUS.OK) {
+      dispatch({ type: CHECK_AVAILABLE_CAR_SUCCESS, payload: result.data });
+      callback.onSuccess(result.data);
+    } else {
+      dispatch({ type: CHECK_AVAILABLE_CAR_FAILURE });
+      callback.onFailure();
+    }
+  } catch (error) {
+    console.log(error);
+    dispatch({ type: CHECK_AVAILABLE_CAR_FAILURE, payload: error });
     callback.onFailure();
   }
 };

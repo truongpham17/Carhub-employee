@@ -9,7 +9,7 @@ import { connect, useDispatch } from 'react-redux';
 
 import { NavigationType } from 'types';
 import { ViewContainer } from 'Components';
-import { getCar } from '@redux/actions/statistic';
+import { getCar, checkAvailableCar } from '@redux/actions/statistic';
 import { scaleHor } from 'Constants/dimensions';
 
 type PropTypes = {
@@ -26,22 +26,34 @@ const ScanCarScreen = ({ navigation }: PropTypes) => {
 
   const barcodeRecognize = barcodes => {
     if (!barcode) {
-      setBarcode(barcodes.data);
       const data = JSON.parse(`${barcodes.data}`);
-      console.log(data);
+      setBarcode(barcodes.data);
       if (!data._id) {
         Alert.alert('Cannot recogize car');
         return;
       }
-      getCar(dispatch)(data._id, {
-        onSuccess(data) {
-          console.log(data);
-          onSuccess(data);
+      checkAvailableCar(dispatch)(data._id, {
+        onSuccess(check) {
+          console.log(check);
+          if (check === 'AVAILABLE') {
+            getCar(dispatch)(data._id, {
+              onSuccess(data) {
+                // console.log(data);
+                onSuccess(data);
+              },
+              onFailure() {
+                Alert.alert('Cannot recognize car');
+              },
+            });
+          } else {
+            Alert.alert('This car is not available!');
+          }
         },
         onFailure() {
           Alert.alert('Cannot recognize car');
         },
       });
+
       // setQRCodeInfo(JSON.parse(`${barcodes.data}`));
     }
   };
