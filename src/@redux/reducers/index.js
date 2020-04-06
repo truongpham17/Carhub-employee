@@ -4,6 +4,7 @@ import rental from './rental';
 import lease from './lease';
 import qrCode from './qrCode';
 import statistic from './statistic';
+import app from './app';
 
 export default combineReducers({
   user,
@@ -11,4 +12,5 @@ export default combineReducers({
   lease,
   qrCode,
   statistic,
+  app,
 });

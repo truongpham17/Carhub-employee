@@ -73,8 +73,8 @@ export const declineLeaseRequest = dispatch => async (
     });
     const result = await query({
       method: METHODS.patch,
-      endpoint: `${ENDPOINTS.lease}/${id}`,
-      data: { status: 'DECLINED', message },
+      endpoint: `${ENDPOINTS.lease}/transaction/${id}`,
+      data: { toStatus: 'DECLINED', message },
     });
     if (result.status === 200) {
       dispatch({ type: DECLINE_LEASE_SUCCESS, payload: result.data });
@@ -101,8 +101,8 @@ export const acceptLeaseRequest = dispatch => async (
     });
     const result = await query({
       method: METHODS.patch,
-      endpoint: `${ENDPOINTS.lease}/${id}`,
-      data: { status: 'ACCEPTED' },
+      endpoint: `${ENDPOINTS.lease}/transaction/${id}`,
+      data: { toStatus: 'ACCEPTED' },
     });
     if (result.status === 200) {
       dispatch({ type: ACCEPT_LEASE_SUCCESS, payload: result.data });

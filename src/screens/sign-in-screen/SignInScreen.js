@@ -7,7 +7,8 @@ import { signIn } from '@redux/actions/user';
 import { NavigationType } from 'types';
 import { connect } from 'react-redux';
 import { scaleVer } from 'Constants/dimensions';
-import Axios from 'axios';
+import axios from 'axios';
+import { changeTransactionStatus } from 'Utils/database';
 
 type PropTypes = {
   navigation: NavigationType,
@@ -16,6 +17,9 @@ type PropTypes = {
 };
 
 const SignInScreen = ({ navigation, loading, signIn }: PropTypes) => {
+  useEffect(() => {
+    changeTransactionStatus('fdsa', 'fsdfsd');
+  }, []);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -64,6 +68,7 @@ const SignInScreen = ({ navigation, loading, signIn }: PropTypes) => {
         label="Password"
         onChangeText={onChangePassword}
         value={password}
+        secureTextEntry
       />
       {/* </View> */}
 

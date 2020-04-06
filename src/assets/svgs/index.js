@@ -12,6 +12,8 @@ import Error from './Error';
 import RightArrow from './RightArrow';
 import Filter from './Filter';
 import ScanIcon from './ScanIcon';
+import ErrorCheck from './ErrorCheck';
+import SuccessStick from './SuccessStick';
 
 export {
   RemoveIcon,
@@ -26,6 +28,8 @@ export {
   Error,
   RightArrow,
   Filter,
+  ErrorCheck,
+  SuccessStick,
 };
 
 export function getSvg(svg) {

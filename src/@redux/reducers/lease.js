@@ -10,6 +10,11 @@ import {
   ACCEPT_LEASE_REQUEST,
   ACCEPT_LEASE_SUCCESS,
 } from '@redux/constants/lease';
+import {
+  CONFIRM_TRANSACTION_REQUEST,
+  CONFIRM_TRANSACTION_SUCCESS,
+  CONFIRM_TRANSACTION_FAILURE,
+} from '@redux/constants/qrCode';
 
 const INITIAL_STATE = {
   loading: false,
@@ -49,6 +54,13 @@ export default (state = INITIAL_STATE, action) => {
       };
     case ACCEPT_LEASE_FAILURE:
       return { ...state, loading: false };
+    case CONFIRM_TRANSACTION_REQUEST:
+      return { ...state, loading: true };
+    case CONFIRM_TRANSACTION_SUCCESS:
+      return { ...state, loading: false };
+    case CONFIRM_TRANSACTION_FAILURE:
+      return { ...state, loading: false };
+
     default:
       return { ...state };
   }

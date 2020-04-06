@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, StyleSheet, Text } from 'react-native';
 import { textStyle } from 'Constants/textStyles';
 import colors from 'Constants/colors';
 import { scaleVer, scaleHor } from 'Constants/dimensions';
+import InputForm from './InputForm';
 import Button from './Button';
 
 type PropTypes = {
@@ -16,42 +17,44 @@ type PropTypes = {
   onDecline: () => void,
 };
 
-const ConfirmPopup = ({
+const PromptDialog = ({
   onConfirm,
   title,
   description,
   cancelLabel = 'Cancel',
   confirmLabel = 'Ok',
   onDecline,
-}: PropTypes) => (
-  <>
-    <Text style={[textStyle.widgetItem, { textAlign: 'center' }]}>{title}</Text>
-    <Text
-      style={[
-        textStyle.bodyText,
-        { marginTop: scaleVer(12), textAlign: 'center' },
-      ]}
-    >
-      {description}
-    </Text>
-    <View style={styles.action}>
-      <Button
-        label={cancelLabel}
-        style={{ minWidth: 100, borderRadius: 4, height: 36 }}
-        colorStart={colors.errorLight}
-        colorEnd={colors.error}
-        onPress={onDecline}
+}: PropTypes) => {
+  const [text, setText] = useState('');
+  return (
+    <>
+      <Text style={textStyle.widgetItem}>{title}</Text>
+      <InputForm
+        label={description}
+        value={text}
+        onChangeText={text => setText(text)}
+        containerStyle={{ width: '100%', marginTop: scaleVer(12) }}
+        autoFocus
       />
-      <Button
-        onPress={onConfirm}
-        label={confirmLabel}
-        colorStart={colors.successLight}
-        colorEnd={colors.success}
-        style={{ minWidth: 100, borderRadius: 4, height: 36 }}
-      />
-    </View>
-  </>
-);
+      <View style={styles.action}>
+        <Button
+          label={cancelLabel}
+          style={{ minWidth: 100, borderRadius: 4, height: 36 }}
+          colorStart={colors.errorLight}
+          colorEnd={colors.error}
+          onPress={onDecline}
+        />
+        <Button
+          onPress={() => onConfirm(text)}
+          label={confirmLabel}
+          colorStart={colors.successLight}
+          colorEnd={colors.success}
+          style={{ minWidth: 100, borderRadius: 4, height: 36 }}
+        />
+      </View>
+    </>
+  );
+};
 
 const styles = StyleSheet.create({
   containerStyle: {
@@ -75,4 +78,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ConfirmPopup;
+export default PromptDialog;

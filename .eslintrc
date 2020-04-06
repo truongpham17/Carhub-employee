@@ -8,7 +8,8 @@
     "react/default-props-match-prop-types": "off",
     "react-hooks/exhaustive-deps": "off",
     "import/no-unresolved": "off",
-    "no-plusplus": "off"
+    "no-plusplus": "off",
+    "default-case": "off"
   },
   "parser": "babel-eslint",
   "env": {

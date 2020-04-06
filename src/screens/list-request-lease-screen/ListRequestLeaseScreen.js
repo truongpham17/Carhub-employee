@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, StyleSheet, FlatList } from 'react-native';
 import {
   setSelectedLease,
@@ -12,6 +12,7 @@ import { ModalInput } from 'Components';
 import { connect, useDispatch } from 'react-redux';
 
 import moment from 'moment';
+import { setPopUpData, cancelPopup } from '@redux/actions/app';
 import RequestLeaseItem from './RequestLeaseItem';
 
 type PropTypes = {
@@ -20,16 +21,14 @@ type PropTypes = {
   navigation: NavigationType,
 };
 
-const ListRequestLeaseScreen = ({
-  leaseList,
-  setSelectedLease,
-  navigation,
-}: PropTypes) => {
+const ListRequestLeaseScreen = ({ leaseList, navigation }: PropTypes) => {
   const dispatch = useDispatch();
   const [refresh, setRefresh] = useState(false);
 
-  const [confirmVisible, setConfirmVisible] = useState(false);
-  const [selectedId, setSelectedId] = useState('');
+  useEffect(() => {
+    getLeaseList(dispatch)();
+  }, []);
+
   const onConfirmItem = id => {
     acceptLeaseRequest(dispatch)(id, {
       onSuccess() {
@@ -41,25 +40,14 @@ const ListRequestLeaseScreen = ({
     });
   };
 
-  const onShowConfirmDecline = id => {
-    setSelectedId(id);
-    setConfirmVisible(true);
-  };
-
-  const onDeclineItem = message => {
-    setConfirmVisible(false);
-
+  const onDeclineItem = (id, message) => {
     declineLeaseRequest(dispatch)(
-      { id: selectedId, message },
+      { id, message },
       {
         onSuccess() {
-          setSelectedId(null);
-
           navigation.navigate('RequestScreen');
         },
         onFailure() {
-          setSelectedId(null);
-
           console.log('ERROR');
         },
       }
@@ -97,8 +85,44 @@ const ListRequestLeaseScreen = ({
       avatar: selectedLease.customer.avatar,
       name: selectedLease.customer.fullName,
       type: 'accept-decline',
-      onConfirm: () => onConfirmItem(selectedLease._id),
-      onDecline: () => onShowConfirmDecline(selectedLease._id),
+      onConfirm() {
+        showConfirmPopup(selectedLease._id);
+      },
+      onDecline() {
+        showDeclinePopup(selectedLease._id);
+      },
+    });
+  };
+
+  const showDeclinePopup = id => {
+    setPopUpData(dispatch)({
+      title: 'Decline request',
+      description: 'Are you sure to decline this request?',
+      onConfirm() {
+        console.log('hello this is great');
+        setPopUpData(dispatch)({
+          title: 'Input reason to decline',
+          description: 'Reason',
+          popupType: 'prompt',
+          onConfirm(msg) {
+            onDeclineItem(id, msg);
+            cancelPopup(dispatch);
+          },
+        });
+      },
+    });
+  };
+
+  const showConfirmPopup = id => {
+    const lease = leaseList.find(lease => lease._id === id);
+
+    setPopUpData(dispatch)({
+      title: 'Confirm request',
+      description: `Are you sure to confirm to this lease request with the ${lease.car.carModel.name}`,
+      onConfirm() {
+        onConfirmItem(id);
+        cancelPopup(dispatch);
+      },
     });
   };
 
@@ -122,23 +146,14 @@ const ListRequestLeaseScreen = ({
             data={item}
             onItemPress={onItemPress}
             navigation={navigation}
-            onAccept={() => onConfirmItem(item._id)}
-            onDecline={() => onShowConfirmDecline(item._id)}
+            onAccept={() => showConfirmPopup(item._id)}
+            onDecline={() => showDeclinePopup(item._id)}
           />
         )}
-        keyExtractor={(item, index) => item._id}
+        keyExtractor={item => item._id}
         showsVerticalScrollIndicator={false}
         onRefresh={onRefresh}
         refreshing={refresh}
-      />
-
-      <ModalInput
-        visible={confirmVisible}
-        onClose={() => setConfirmVisible(false)}
-        onConfirm={msg => onDeclineItem(msg)}
-        label="Are you sure to decline this request"
-        description="Please write down some reasons why you decline this request to customer"
-        confirmLabel="Confirm"
       />
     </View>
   );

@@ -17,6 +17,7 @@ import SearchMapInput from './SearchMapInput';
 import ButtonGroup from './ButtonGroup';
 import QRCodeGenModal from './QRCodeGenModal';
 import ModalInput from './ModalInput';
+import Popup from './Popup';
 
 export {
   QRCodeGenModal,
@@ -38,4 +39,5 @@ export {
   SearchMapInput,
   ButtonGroup,
   ModalInput,
+  Popup,
 };

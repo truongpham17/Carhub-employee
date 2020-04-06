@@ -13,10 +13,9 @@ import { textStyle } from 'Constants/textStyles';
 import { scaleVer, scaleHor } from 'Constants/dimensions';
 import colors from 'Constants/colors';
 
-import { connect } from 'react-redux';
+import { connect, useSelector, useDispatch } from 'react-redux';
 import { updateRentalStatus } from '@redux/actions/rental';
-import firebase from 'react-native-firebase';
-import { COMPLETED, CANCEL } from 'Constants/status';
+import { setPopUpData } from '@redux/actions/app';
 // import moment from 'moment';
 
 type PropsType = {
@@ -48,11 +47,12 @@ const RentDetailScreen = ({ navigation, updateRentalStatus }: PropsType) => {
     onDecline,
   } = navigation.state.params;
 
+  const dispatch = useDispatch();
+  const loading = useSelector(state => state.lease.loading);
+
   const [valueForQR, setValueForQR] = useState('');
   const [generateNewQR, setGenerateNewQR] = useState(true);
   const [qrCodeModalVisible, setQrCodeModalVisible] = useState(false);
-  const [popupVisible, setPopupVisible] = useState(false);
-  const [loading, setLoading] = useState(false);
 
   const handleBackPress = () => {
     navigation.goBack();
@@ -61,52 +61,10 @@ const RentDetailScreen = ({ navigation, updateRentalStatus }: PropsType) => {
     setQrCodeModalVisible(false);
   };
 
-  const handleConfirmDecline = () => {
-    updateRentalStatus({
-      id: data.find(i => i.att === '_id').value,
-      status: 'DECLINED',
-    });
-    setPopupVisible(false);
-    navigation.popToTop();
-  };
-
-  const onDeclineComfirm = () => {
-    setPopupVisible(true);
-  };
-
-  const handleDeclineRequest = () => {};
-
   const onSubmitTransaction = () => {
     onConfirm();
-    // const id = data.find(i => i.att === '_id').value;
-
-    // firebase
-    //   .database()
-    //   .ref(`scanQRCode/${id}`)
-    //   .on('value', snapShot => {
-    //     switch (snapShot.val().status) {
-    //       case COMPLETED: {
-    //         setLoading(false);
-    //         Alert.alert('Success confirm transaction!');
-    //         navigation.pop();
-    //         break;
-    //       }
-    //       case CANCEL: {
-    //         setLoading(false);
-    //         Alert.alert('Cancel transaction');
-    //         navigation.pop();
-    //         break;
-    //       }
-
-    //       default:
-    //         console.log('error');
-    //     }
-    //   });
   };
 
-  const handleDelivery = () => {
-    setQrCodeModalVisible(true);
-  };
   const renderAction = () => {
     switch (type) {
       case 'accept-decline':
@@ -132,7 +90,7 @@ const RentDetailScreen = ({ navigation, updateRentalStatus }: PropsType) => {
               label="Decline"
               colorStart={colors.errorLight}
               colorEnd={colors.error}
-              onPress={onDeclineComfirm}
+              onPress={onDecline}
               style={styles.button}
             />
           </View>
@@ -140,10 +98,7 @@ const RentDetailScreen = ({ navigation, updateRentalStatus }: PropsType) => {
       case 'transaction':
         return (
           <View style={{ marginVertical: scaleVer(8) }}>
-            <Button
-              label="Confirm transaction"
-              onPress={() => onSubmitTransaction()}
-            />
+            <Button label="Confirm transaction" onPress={onSubmitTransaction} />
           </View>
         );
       default:
@@ -185,14 +140,6 @@ const RentDetailScreen = ({ navigation, updateRentalStatus }: PropsType) => {
           ))}
         </View>
         {renderAction()}
-        {/* <View style={styles.buttonContainer}>
-          <Button
-            label="Decline Request"
-            colorStart={colors.errorLight}
-            colorEnd={colors.error}
-            onPress={handleDeclineRequest}
-          />
-        </View> */}
       </View>
 
       <QRCodeGenModal
@@ -201,13 +148,13 @@ const RentDetailScreen = ({ navigation, updateRentalStatus }: PropsType) => {
         onClose={onCloseQrCodeModal}
         setGenerateNewQR={setGenerateNewQR}
       />
-      <ConfirmPopup
-        title="CONFIRM"
-        description="Would you like to decline this request?"
+      {/* <ConfirmPopup
+        title="Decline request"
+        description="Are you sure to decline this request?"
         modalVisible={popupVisible}
         onClose={() => setPopupVisible(false)}
         onConfirm={handleConfirmDecline}
-      />
+      /> */}
     </ViewContainer>
   );
 };

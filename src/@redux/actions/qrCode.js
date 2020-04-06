@@ -1,8 +1,5 @@
 import {
   SET_QR_CODE_INFO,
-  GET_TRANSACTION_FAILURE,
-  GET_TRANSACTION_REQUEST,
-  GET_TRANSACTION_SUCCESS,
   SET_TRANSACTION_INFO,
   CONFIRM_TRANSACTION_REQUEST,
   CONFIRM_TRANSACTION_SUCCESS,
@@ -25,8 +22,9 @@ export async function getTransationInfo(data) {
     if (result.status === STATUS.OK) {
       return { ...result.data, transactionType: data.type };
     }
+    return null;
   } catch (error) {
-    return {};
+    return null;
   }
 }
 
@@ -37,25 +35,23 @@ export function setTransactionInfo(data) {
   };
 }
 
-export function confirmTransaction(
-  { id, type, toStatus },
+export const confirmTransaction = dispatch => async (
+  { id, type, toStatus, licensePlates },
   callback = INITIAL_CALLBACK
-) {
-  return async dispatch => {
-    try {
-      dispatch({ type: CONFIRM_TRANSACTION_REQUEST });
-      const result = await query({
-        endpoint: `${type}/transaction/${id}`,
-        method: METHODS.post,
-        data: { toStatus },
-      });
-      if (result.status === STATUS.OK) {
-        dispatch({ type: CONFIRM_TRANSACTION_SUCCESS, payload: result.data });
-        callback.onSuccess();
-      }
-    } catch (error) {
-      dispatch({ type: CONFIRM_TRANSACTION_FAILURE, payload: error });
-      callback.onFailure();
+) => {
+  try {
+    dispatch({ type: CONFIRM_TRANSACTION_REQUEST });
+    const result = await query({
+      endpoint: `${type}/transaction/${id}`,
+      method: METHODS.patch,
+      data: { toStatus, licensePlates },
+    });
+    if (result.status === STATUS.OK) {
+      dispatch({ type: CONFIRM_TRANSACTION_SUCCESS, payload: result.data });
+      callback.onSuccess();
     }
-  };
-}
+  } catch (error) {
+    dispatch({ type: CONFIRM_TRANSACTION_FAILURE, payload: error });
+    callback.onFailure();
+  }
+};
