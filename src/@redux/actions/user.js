@@ -24,7 +24,7 @@ export function signIn({ username, password }, callback = INITIAL_CALLBACK) {
       }
     } catch (error) {
       console.log(error);
-      dispatch({ type: SIGN_IN_FAILURE, payload: error });
+      dispatch({ type: SIGN_IN_FAILURE, payload: error.response.data });
       callback.onFailure();
     }
   };

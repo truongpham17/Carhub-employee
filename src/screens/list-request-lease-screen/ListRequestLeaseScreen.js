@@ -7,7 +7,6 @@ import {
   getLeaseList,
 } from '@redux/actions/lease';
 import { LeaseType, NavigationType } from 'types';
-import { ModalInput } from 'Components';
 
 import { connect, useDispatch } from 'react-redux';
 

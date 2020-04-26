@@ -24,7 +24,7 @@ export function getUsers() {
     } catch (error) {
       dispatch({
         type: 'GET_USER_ERROR',
-        payload: error,
+        payload: error.response.data,
       });
     }
   };

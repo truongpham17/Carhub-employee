@@ -21,7 +21,3 @@ export const REMOVE_CAR_FAILURE = 'remove-car-failure';
 export const GET_CAR_REQUEST = 'get-car-request';
 export const GET_CAR_SUCCESS = 'get-car-success';
 export const GET_CAR_FAILURE = 'get-car-failure';
-
-export const CHECK_AVAILABLE_CAR_REQUEST = 'check-available-car-request';
-export const CHECK_AVAILABLE_CAR_SUCCESS = 'check-available-car-success';
-export const CHECK_AVAILABLE_CAR_FAILURE = 'check-available-car-failure';

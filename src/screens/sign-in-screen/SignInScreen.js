@@ -9,6 +9,7 @@ import { connect } from 'react-redux';
 import { scaleVer } from 'Constants/dimensions';
 import axios from 'axios';
 import { changeTransactionStatus } from 'Utils/database';
+import firebase from 'react-native-firebase';
 
 type PropTypes = {
   navigation: NavigationType,
@@ -35,7 +36,7 @@ const SignInScreen = ({ navigation, loading, signIn }: PropTypes) => {
   const handleUserLogin = () => {
     // console.log('come here');
     signIn(
-      { username: 'hochiminhemployee', password: '123456' },
+      { username, password },
       {
         onSuccess() {
           navigation.navigate('MainApp');
@@ -49,7 +50,6 @@ const SignInScreen = ({ navigation, loading, signIn }: PropTypes) => {
 
   return (
     <ViewContainer loading={loading} requestError={error}>
-      {/* <View style={{ flex: 1 }}> */}
       <Text
         style={[
           textStyle.sectionHeading,

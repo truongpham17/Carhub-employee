@@ -1,12 +1,16 @@
 import React, { useState } from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, ActivityIndicator } from 'react-native';
 import { RNCamera } from 'react-native-camera';
-import { getTransationInfo } from '@redux/actions/qrCode';
+import { getTransationInfo, setTransactionInfo } from '@redux/actions/qrCode';
 import BarcodeMask from 'react-native-barcode-mask';
 import { NavigationType } from 'types';
-import { useSelector, useDispatch } from 'react-redux';
-import { setPopUpData } from '@redux/actions/app';
-import { processLeaseRequest, processRentalRequest } from './utils';
+import { useDispatch, useSelector } from 'react-redux';
+import { setPopUpData, cancelPopup } from '@redux/actions/app';
+import FadedContainer from 'Components/FadedContainer';
+import LottieView from 'lottie-react-native';
+import { loading as loadingAnimated } from 'Assets/animation';
+import processRentalRequest from './rental.utils';
+import processLeaseRequest from './lease.utils';
 
 type PropTypes = {
   setQRCodeInfo: () => void,
@@ -15,10 +19,10 @@ type PropTypes = {
 const ScanQrCodeScreen = ({ navigation }: PropTypes) => {
   const dispatch = useDispatch();
   const [barcode, setBarcode] = useState(null);
+  const loading = useSelector(state => state.qrCode.loading);
 
   const loadInfo = async data => {
-    const transactionInfo = await getTransationInfo(data);
-    console.log(transactionInfo);
+    const transactionInfo = await getTransationInfo(dispatch)(data);
 
     if (!transactionInfo) {
       setPopUpData(dispatch)({
@@ -27,13 +31,17 @@ const ScanQrCodeScreen = ({ navigation }: PropTypes) => {
         description: 'Can not find this request. Please try to scan again!',
         onConfirm() {
           setBarcode(null);
+          cancelPopup(dispatch);
+          navigation.pop();
         },
       });
     }
 
     if (transactionInfo.transactionType === 'rental') {
+      setTransactionInfo(dispatch)(transactionInfo);
       processRentalRequest({ transactionInfo, navigation, dispatch });
     } else {
+      setTransactionInfo(dispatch)(transactionInfo);
       processLeaseRequest({ transactionInfo, navigation, dispatch });
     }
 
@@ -48,6 +56,12 @@ const ScanQrCodeScreen = ({ navigation }: PropTypes) => {
   };
   return (
     <View style={styles.container}>
+      {loading && (
+        <View style={{ position: 'absolute', zIndex: 2 }}>
+          <ActivityIndicator animating />
+        </View>
+      )}
+
       <RNCamera
         style={styles.preview}
         androidCameraPermissionOptions={{

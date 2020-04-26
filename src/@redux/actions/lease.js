@@ -25,7 +25,7 @@ export const getLeaseList = dispatch => async (callback = INITIAL_CALLBACK) => {
       callback.onSuccess();
     }
   } catch (error) {
-    dispatch({ type: GET_LEASE_FAILURE, payload: error });
+    dispatch({ type: GET_LEASE_FAILURE, payload: error.response.data });
     callback.onFailure();
   }
 };
@@ -57,7 +57,7 @@ export const updateLeaseStatus = (
   } catch (error) {
     dispatch({
       type: UPDATE_LEASE_ITEM_FAILURE,
-      payload: error,
+      payload: error.response.data,
     });
     callback.onFailure();
   }
@@ -85,7 +85,7 @@ export const declineLeaseRequest = dispatch => async (
   } catch (error) {
     dispatch({
       type: DECLINE_LEASE_FAILURE,
-      payload: error,
+      payload: error.response.data,
     });
     callback.onFailure();
   }
@@ -114,7 +114,7 @@ export const acceptLeaseRequest = dispatch => async (
   } catch (error) {
     dispatch({
       type: ACCEPT_LEASE_FAILURE,
-      payload: error,
+      payload: error.response.data,
     });
     console.log(error);
     callback.onFailure();

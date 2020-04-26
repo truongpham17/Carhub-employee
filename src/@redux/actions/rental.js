@@ -20,7 +20,7 @@ export function getRentalList(data, callback = INITIAL_CALLBACK) {
         callback.success();
       }
     } catch (error) {
-      dispatch({ type: GET_RENTAL_FAILURE, payload: error });
+      dispatch({ type: GET_RENTAL_FAILURE, payload: error.response.data });
       callback.failure();
     }
   };
@@ -53,7 +53,7 @@ export const updateRentalStatus = (
   } catch (error) {
     dispatch({
       type: UPDATE_RENTAL_ITEM_FAILURE,
-      payload: error,
+      payload: error.response.data,
     });
     callback.onFailure();
   }

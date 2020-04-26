@@ -7,7 +7,7 @@
     "ios": "react-native run-ios",
     "test": "jest",
     "lint": "eslint .",
-    "start": "react-native start",
+    "start": "react-native start --port 9988",
     "android:postinstall": "npx jetify",
     "debug": "open 'rndebugger://set-debugger-loc?host=localhost&port=9988'"
   },
@@ -29,7 +29,6 @@
     "react-native-barcode-mask": "^1.1.0",
     "react-native-calendars": "^1.220.0",
     "react-native-camera": "^3.19.0",
-    "react-native-dialog-input": "^1.0.7",
     "react-native-elements": "^1.2.7",
     "react-native-fast-image": "^7.0.2",
     "react-native-firebase": "^5.5.6",

@@ -9,6 +9,7 @@ type PopupType = {
   modalVisible: Boolean,
   popupType: 'success' | 'confirm' | 'error' | 'prompt',
   grandResponder: Boolean,
+  acceptOnly: Boolean,
 };
 
 export const setPopUpData = dispatch => (data: PopupType) =>

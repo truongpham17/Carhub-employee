@@ -77,7 +77,7 @@ export const getHubCarList = dispatch => async (
       callback.onSuccess();
     }
   } catch (error) {
-    dispatch({ type: GET_HUB_CAR_FAILURE, payload: error });
+    dispatch({ type: GET_HUB_CAR_FAILURE, payload: error.response.data });
     callback.onFailure();
   }
 };
@@ -106,7 +106,7 @@ export const addCar = dispatch => async (data, callback = INITIAL_CALLBACK) => {
       callback.onFailure();
     }
   } catch (error) {
-    dispatch({ type: ADD_CAR_FAILURE, payload: error });
+    dispatch({ type: ADD_CAR_FAILURE, payload: error.response.data });
     callback.onFailure();
   }
 };
@@ -130,7 +130,7 @@ export const updateCar = dispatch => async (
       callback.onFailure();
     }
   } catch (error) {
-    dispatch({ type: UPDATE_CAR_FAILURE, payload: error });
+    dispatch({ type: UPDATE_CAR_FAILURE, payload: error.response.data });
     callback.onFailure();
   }
 };
@@ -154,7 +154,7 @@ export const removeCar = dispatch => async (
       callback.onFailure();
     }
   } catch (error) {
-    dispatch({ type: REMOVE_CAR_FAILURE, payload: error });
+    dispatch({ type: REMOVE_CAR_FAILURE, payload: error.response.data });
     callback.onFailure();
   }
 };
@@ -176,28 +176,7 @@ export const getCar = dispatch => async (id, callback = INITIAL_CALLBACK) => {
     }
   } catch (error) {
     console.log(error);
-    dispatch({ type: GET_CAR_FAILURE, payload: error });
-    callback.onFailure();
-  }
-};
-
-export const checkAvailableCar = dispatch => async (
-  id,
-  callback = INITIAL_CALLBACK
-) => {
-  try {
-    dispatch({ type: CHECK_AVAILABLE_CAR_REQUEST });
-    const result = await query({ endpoint: `car/checkAvailableCar/${id}` });
-    if (result.status === STATUS.OK) {
-      dispatch({ type: CHECK_AVAILABLE_CAR_SUCCESS, payload: result.data });
-      callback.onSuccess(result.data);
-    } else {
-      dispatch({ type: CHECK_AVAILABLE_CAR_FAILURE });
-      callback.onFailure();
-    }
-  } catch (error) {
-    console.log(error);
-    dispatch({ type: CHECK_AVAILABLE_CAR_FAILURE, payload: error });
+    dispatch({ type: GET_CAR_FAILURE, payload: error.response.data });
     callback.onFailure();
   }
 };

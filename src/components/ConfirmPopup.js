@@ -14,6 +14,7 @@ type PropTypes = {
   cancelLabel?: string,
   confirmLabel?: string,
   onDecline: () => void,
+  acceptOnly?: boolean,
 };
 
 const ConfirmPopup = ({
@@ -23,35 +24,50 @@ const ConfirmPopup = ({
   cancelLabel = 'Cancel',
   confirmLabel = 'Ok',
   onDecline,
-}: PropTypes) => (
-  <>
-    <Text style={[textStyle.widgetItem, { textAlign: 'center' }]}>{title}</Text>
-    <Text
-      style={[
-        textStyle.bodyText,
-        { marginTop: scaleVer(12), textAlign: 'center' },
-      ]}
-    >
-      {description}
-    </Text>
-    <View style={styles.action}>
-      <Button
-        label={cancelLabel}
-        style={{ minWidth: 100, borderRadius: 4, height: 36 }}
-        colorStart={colors.errorLight}
-        colorEnd={colors.error}
-        onPress={onDecline}
-      />
-      <Button
-        onPress={onConfirm}
-        label={confirmLabel}
-        colorStart={colors.successLight}
-        colorEnd={colors.success}
-        style={{ minWidth: 100, borderRadius: 4, height: 36 }}
-      />
-    </View>
-  </>
-);
+  acceptOnly,
+}: PropTypes) => {
+  const renderAction = () => {
+    if (acceptOnly) {
+      return (
+        <Button
+          label={confirmLabel}
+          style={{ borderRadius: 4, height: 36, marginTop: scaleVer(16) }}
+          colorStart={colors.successLight}
+          colorEnd={colors.success}
+          onPress={onConfirm}
+        />
+      );
+    }
+    return (
+      <View style={styles.action}>
+        <Button
+          label={cancelLabel}
+          style={{ minWidth: 100, borderRadius: 4, height: 36 }}
+          colorStart={colors.errorLight}
+          colorEnd={colors.error}
+          onPress={onDecline}
+        />
+        <Button
+          onPress={onConfirm}
+          label={confirmLabel}
+          colorStart={colors.successLight}
+          colorEnd={colors.success}
+          style={{ minWidth: 100, borderRadius: 4, height: 36 }}
+        />
+      </View>
+    );
+  };
+  return (
+    <>
+      <Text style={textStyle.widgetItem}>{title}</Text>
+      <Text style={[textStyle.bodyText, { marginTop: scaleVer(12) }]}>
+        {description}
+      </Text>
+
+      {renderAction()}
+    </>
+  );
+};
 
 const styles = StyleSheet.create({
   containerStyle: {

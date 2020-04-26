@@ -7,8 +7,7 @@ import { textStyle } from 'Constants/textStyles';
 import { scaleVer, scaleHor } from 'Constants/dimensions';
 import colors from 'Constants/colors';
 
-import { connect, useSelector } from 'react-redux';
-import { updateRentalStatus } from '@redux/actions/rental';
+import { useSelector } from 'react-redux';
 // import moment from 'moment';
 
 type PropsType = {
@@ -30,14 +29,7 @@ type PropsType = {
 };
 
 const RentDetailScreen = ({ navigation }: PropsType) => {
-  const {
-    data,
-    avatar,
-    name,
-    type,
-    onConfirm,
-    onDecline,
-  } = navigation.state.params;
+  const { data, type, onConfirm, onDecline } = navigation.state.params;
 
   const loading = useSelector(state => state.lease.loading);
 
@@ -96,25 +88,11 @@ const RentDetailScreen = ({ navigation }: PropsType) => {
     >
       <View style={{ flex: 1 }}>
         <View>
-          <View style={styles.nameContainer}>
-            <Avatar
-              size="xlarge"
-              rounded
-              source={{
-                uri: avatar,
-              }}
-            />
-            <Text style={textStyle.widgetTitle}>{name}</Text>
-          </View>
-        </View>
-        <View>
           {data.map((item, index) => (
             <ListItem
-              key={item.label}
-              label={item.label}
-              detail={item.value}
               type="detail"
               pressable={false}
+              {...item}
               showSeparator={index !== data.length - 1}
             />
           ))}
@@ -141,12 +119,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default connect(
-  state => ({
-    data: state.rental.rentals.find(
-      item => item._id === state.rental.selectedId
-    ),
-    // isLoading: state.rentalsList.isLoading,
-  }),
-  { updateRentalStatus }
-)(RentDetailScreen);
+export default RentDetailScreen;
