@@ -6,9 +6,7 @@ import BarcodeMask from 'react-native-barcode-mask';
 import { NavigationType } from 'types';
 import { useDispatch, useSelector } from 'react-redux';
 import { setPopUpData, cancelPopup } from '@redux/actions/app';
-import FadedContainer from 'Components/FadedContainer';
-import LottieView from 'lottie-react-native';
-import { loading as loadingAnimated } from 'Assets/animation';
+import { ViewContainer } from 'Components';
 import processRentalRequest from './rental.utils';
 import processLeaseRequest from './lease.utils';
 
@@ -19,11 +17,18 @@ type PropTypes = {
 const ScanQrCodeScreen = ({ navigation }: PropTypes) => {
   const dispatch = useDispatch();
   const [barcode, setBarcode] = useState(null);
+  const { id } = navigation.state.params;
   const loading = useSelector(state => state.qrCode.loading);
 
   const loadInfo = async data => {
     const transactionInfo = await getTransationInfo(dispatch)(data);
-
+    if (transactionInfo._id !== id) {
+      return setPopUpData(dispatch)({
+        popupType: 'error',
+        title: 'Error',
+        description: "Contract id doesn't match",
+      });
+    }
     if (!transactionInfo) {
       setPopUpData(dispatch)({
         popupType: 'error',
@@ -55,12 +60,12 @@ const ScanQrCodeScreen = ({ navigation }: PropTypes) => {
     }
   };
   return (
-    <View style={styles.container}>
-      {loading && (
+    <ViewContainer safeArea={false} loading={loading} style={styles.container}>
+      {/* {loading && (
         <View style={{ position: 'absolute', zIndex: 2 }}>
           <ActivityIndicator animating />
         </View>
-      )}
+      )} */}
 
       <RNCamera
         style={styles.preview}
@@ -74,7 +79,7 @@ const ScanQrCodeScreen = ({ navigation }: PropTypes) => {
       >
         <BarcodeMask />
       </RNCamera>
-    </View>
+    </ViewContainer>
   );
 };
 const styles = StyleSheet.create({
@@ -82,6 +87,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    paddingHorizontal: 0,
   },
   preview: {
     flex: 1,

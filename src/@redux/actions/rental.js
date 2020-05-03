@@ -10,7 +10,7 @@ import {
   UPDATE_RENTAL_ITEM_SUCCESS,
 } from '../constants/rental';
 
-export function getRentalList(data, callback = INITIAL_CALLBACK) {
+export function getRentalList(callback = INITIAL_CALLBACK) {
   return async dispatch => {
     try {
       dispatch({ type: GET_RENTAL_REQUEST });

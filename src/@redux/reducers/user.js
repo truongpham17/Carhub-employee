@@ -2,6 +2,7 @@ import {
   SIGN_IN_FAILURE,
   SIGN_IN_REQUEST,
   SIGN_IN_SUCCESS,
+  SIGN_OUT,
 } from '../constants/user';
 
 const INITIAL_STATE = {
@@ -21,7 +22,11 @@ export default (state = INITIAL_STATE, action) => {
       return { ...state, ...action.payload, loading: false };
     case SIGN_IN_FAILURE:
       return { ...state, loading: false };
+    case SIGN_OUT:
+      return {
+        ...INITIAL_STATE,
+      };
     default:
-      return { ...state };
+      return state;
   }
 };

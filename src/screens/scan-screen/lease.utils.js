@@ -12,6 +12,7 @@ import { confirmTransaction } from '@redux/actions/qrCode';
 import { setPopUpData, cancelPopup } from '@redux/actions/app';
 import firebase from 'react-native-firebase';
 import { formatDate } from 'Utils/date';
+import { getLeaseList } from '@redux/actions';
 
 const TRANSACTION_LEASE = ['ACCEPTED', 'WAIT_TO_RETURN', 'AVAILABLE'];
 
@@ -74,59 +75,35 @@ function listenFirebaseStatus({ lease, dispatch }) {
 function handleProcessLeaseTransaction({ lease, navigation, dispatch }) {
   switch (lease.status) {
     case 'ACCEPTED':
-      if (!lease.car.licensePlates) {
-        setPopUpData(dispatch)({
-          title: 'License plates',
-          description: 'License plates',
-          popupType: 'prompt',
-          onConfirm(license) {
-            console.log('transaction info: ', lease);
-            setPopUpData(dispatch)({
-              title: 'Confirm take car?',
-              description: `Confirm take the ${lease.car.carModel.name} with license plates ${license} from ${lease.car.customer.fullName}`,
-              onConfirm() {
-                cancelPopup(dispatch);
-                confirmTransaction(dispatch)(
-                  {
-                    id: lease._id,
-                    type: 'lease',
-                    licensePlates: license,
+      setPopUpData(dispatch)({
+        title: 'Confirm take car?',
+        description: `Confirm take ${lease.car.carModel.name} with license plates ${lease.car.licensePlates} from ${lease.car.customer.fullName}?`,
+        onConfirm() {
+          cancelPopup(dispatch);
+          confirmTransaction(dispatch)(
+            { id: lease._id, type: 'lease' },
+            {
+              onSuccess() {
+                changeTransactionStatus(lease._id, COMPLETED);
+                setPopUpData(dispatch)({
+                  popupType: 'success',
+                  title: 'Success',
+                  description: 'Successfully take car from customer',
+                  onConfirm() {
+                    navigation.navigate('RequestScreen');
+                    getLeaseList(dispatch)();
+                    cancelPopup(dispatch);
                   },
-                  {
-                    onSuccess() {
-                      changeTransactionStatus(lease._id, COMPLETED);
-                      navigation.navigate('RequestScreen');
-                    },
-                    onFailure() {
-                      changeTransactionStatus(lease._id, CANCEL);
-                    },
-                  }
-                );
+                });
+                // navigation.navigate('RequestScreen');
               },
-            });
-          },
-        });
-      } else {
-        setPopUpData(dispatch)({
-          title: 'Confirm take car?',
-          description: `Confirm take ${lease.car.carModel.name} with license plates ${lease.car.licensePlates} from ${lease.car.customer.fullName}?`,
-          onConfirm() {
-            cancelPopup(dispatch);
-            confirmTransaction(dispatch)(
-              { id: lease._id, type: 'lease' },
-              {
-                onSuccess() {
-                  changeTransactionStatus(lease._id, COMPLETED);
-                  navigation.navigate('RequestScreen');
-                },
-                onFailure() {
-                  changeTransactionStatus(lease._id, CANCEL);
-                },
-              }
-            );
-          },
-        });
-      }
+              onFailure() {
+                changeTransactionStatus(lease._id, CANCEL);
+              },
+            }
+          );
+        },
+      });
 
       break;
     case 'WAIT_TO_RETURN':
@@ -152,21 +129,11 @@ export default function processLeaseRequest({
   changeTransactionStatus(transactionInfo._id, WAITING_FOR_CONFIRM);
 
   const selectedLease: LeaseType = { ...transactionInfo };
-  let actionType = 'none';
-  if (TRANSACTION_LEASE.includes(selectedLease.status)) {
-    actionType = 'transaction';
-  }
-  navigation.navigate('RentDetailScreen', {
-    ...getLeaseData(selectedLease, actionType),
-    onConfirm() {
-      handleProcessLeaseTransaction({
-        lease: selectedLease,
-        navigation,
-        dispatch,
-      });
-    },
-    onDecline() {
-      changeTransactionStatus(selectedLease._id, CANCEL);
-    },
-  });
+  // let actionType = 'none';
+  // if (TRANSACTION_LEASE.includes(selectedLease.status)) {
+  //   actionType = 'transaction';
+  // }
+  console.log('pop navigation ahhihihihi');
+  navigation.navigate('RentDetailScreen');
+  handleProcessLeaseTransaction({ lease: selectedLease, navigation, dispatch });
 }

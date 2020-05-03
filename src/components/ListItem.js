@@ -24,6 +24,9 @@ type PropTypes = {
   detail?: string,
   pressable?: boolean,
   containerStyle: StyleProp<ViewStyle>,
+  headGroup?: boolean,
+  headTitle?: string,
+  headerStyle?: StyleProp<ViewStyle>,
 };
 
 const ListItem = ({
@@ -35,7 +38,10 @@ const ListItem = ({
   type = 'text',
   detail,
   containerStyle,
-  pressable = true,
+  pressable = false,
+  headGroup,
+  headTitle,
+  headerStyle,
 }: PropTypes) => {
   const getAction = () => {
     switch (type) {
@@ -55,7 +61,9 @@ const ListItem = ({
             <Text
               style={[
                 styles.detail,
-                nextIcon ? { marginEnd: scaleHor(8) } : {},
+                nextIcon
+                  ? { marginEnd: scaleHor(8), ...textStyle.bodyTextBold }
+                  : {},
               ]}
             >
               {detail}
@@ -69,25 +77,38 @@ const ListItem = ({
     }
   };
   return (
-    <TouchableOpacity
-      style={[
-        styles.container,
-        showSeparator ? styles.separator : {},
-        containerStyle,
-      ]}
-      onPress={onItemPress}
-      disabled={!pressable}
-    >
-      <View style={styles.labelContainer}>
-        {icon && (
-          <View style={{ marginEnd: scaleHor(16), width: scaleHor(16) }}>
-            {getSvg(icon, { fill: colors.dark20 })}
-          </View>
-        )}
-        <Text style={styles.label}>{label}</Text>
-      </View>
-      {getAction()}
-    </TouchableOpacity>
+    <>
+      {headGroup && (
+        <Text
+          style={[
+            textStyle.widgetItem,
+            { marginTop: scaleVer(24) },
+            headerStyle,
+          ]}
+        >
+          {headTitle}
+        </Text>
+      )}
+      <TouchableOpacity
+        style={[
+          styles.container,
+          showSeparator ? styles.separator : {},
+          containerStyle,
+        ]}
+        onPress={onItemPress}
+        disabled={!pressable}
+      >
+        <View style={styles.labelContainer}>
+          {icon && (
+            <View style={{ marginEnd: scaleHor(16), width: scaleHor(16) }}>
+              {getSvg(icon, { fill: colors.dark20 })}
+            </View>
+          )}
+          <Text style={styles.label}>{label}</Text>
+        </View>
+        {getAction()}
+      </TouchableOpacity>
+    </>
   );
 };
 
@@ -96,7 +117,7 @@ export default ListItem;
 const styles = StyleSheet.create({
   container: {
     // minHeight: scaleHor(60),
-    paddingVertical: scaleHor(20),
+    paddingVertical: scaleHor(16),
     paddingHorizontal: scaleHor(8),
     alignItems: 'center',
     flexDirection: 'row',

@@ -5,6 +5,7 @@ import ModalContainer from './ModalContainer';
 import ConfirmPopup from './ConfirmPopup';
 import StatusDialog from './StatusDialog';
 import PromptDialog from './PromptDialog';
+import ProfilePopup from './ProfilePopup';
 
 type PropTypes = {
   popupType: String,
@@ -30,6 +31,8 @@ const PopUp = (props: PropTypes) => {
         return <StatusDialog {...props} />;
       case 'prompt':
         return <PromptDialog {...props} />;
+      case 'profile':
+        return <ProfilePopup {...props} />;
 
       default:
         return null;

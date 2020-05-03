@@ -41,7 +41,14 @@ const RentDetailScreen = ({ navigation }: PropsType) => {
     switch (type) {
       case 'accept-decline':
         return (
-          <View style={{ flexDirection: 'row', marginVertical: scaleVer(8) }}>
+          <View
+            style={{
+              flexDirection: 'row',
+              marginVertical: scaleVer(12),
+              flex: 1,
+              alignItems: 'flex-end',
+            }}
+          >
             <View style={{ flex: 1, marginEnd: scaleHor(8) }}>
               <Button
                 label="Decline"
@@ -55,21 +62,34 @@ const RentDetailScreen = ({ navigation }: PropsType) => {
             </View>
           </View>
         );
-      case 'decline':
+      case 'decline-transaction':
         return (
-          <View style={{ marginVertical: scaleVer(8) }}>
+          <View
+            style={{
+              marginVertical: scaleVer(12),
+              flex: 1,
+              justifyContent: 'flex-end',
+            }}
+          >
             <Button
-              label="Decline"
+              label="Decline request"
               colorStart={colors.errorLight}
               colorEnd={colors.error}
               onPress={onDecline}
               style={styles.button}
             />
+            <Button label="Confirm transaction" onPress={onConfirm} />
           </View>
         );
       case 'transaction':
         return (
-          <View style={{ marginVertical: scaleVer(8) }}>
+          <View
+            style={{
+              marginVertical: scaleVer(12),
+              flex: 1,
+              justifyContent: 'flex-end',
+            }}
+          >
             <Button label="Confirm transaction" onPress={onConfirm} />
           </View>
         );
@@ -84,18 +104,22 @@ const RentDetailScreen = ({ navigation }: PropsType) => {
       haveBackHeader
       onBackPress={handleBackPress}
       scrollable
+      style={{ flex: 1 }}
       loading={loading}
     >
       <View style={{ flex: 1 }}>
         <View>
-          {data.map((item, index) => (
-            <ListItem
-              type="detail"
-              pressable={false}
-              {...item}
-              showSeparator={index !== data.length - 1}
-            />
-          ))}
+          {data.map(
+            (item, index) =>
+              !item.hide && (
+                <ListItem
+                  type="detail"
+                  pressable={false}
+                  {...item}
+                  showSeparator={index !== data.length - 1}
+                />
+              )
+          )}
         </View>
         {renderAction()}
       </View>
@@ -115,7 +139,7 @@ const styles = StyleSheet.create({
     marginVertical: scaleVer(16),
   },
   button: {
-    marginVertical: scaleVer(5),
+    marginVertical: scaleVer(8),
   },
 });
 

@@ -33,7 +33,7 @@ const ManageScreen = ({ navigation }: PropTypes) => {
   return (
     <ViewContainer
       haveBackHeader
-      title="Manage screen"
+      title="Manage car"
       onBackPress={onBackPress}
       loading={loading}
     >

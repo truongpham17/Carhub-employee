@@ -14,6 +14,7 @@ import Filter from './Filter';
 import ScanIcon from './ScanIcon';
 import ErrorCheck from './ErrorCheck';
 import SuccessStick from './SuccessStick';
+import NextIcon from './NextIcon';
 
 export {
   RemoveIcon,
@@ -38,6 +39,8 @@ export function getSvg(svg) {
       return <Filter />;
     case 'scan':
       return <ScanIcon />;
+    case 'next':
+      return <NextIcon />;
     default:
       return null;
   }

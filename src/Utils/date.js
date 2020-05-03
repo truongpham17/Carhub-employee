@@ -6,3 +6,7 @@ export function formatDate(date: Date) {
 export function substractDate(fromDate, toDate) {
   return moment(toDate).diff(fromDate, 'days');
 }
+
+export function formatPrice(price) {
+  return `$ ${price}`;
+}

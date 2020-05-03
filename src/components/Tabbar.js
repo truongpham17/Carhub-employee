@@ -13,22 +13,26 @@ import colors from 'Constants/colors';
 import { scaleVer } from 'Constants/dimensions';
 
 // navigation.state.routeName
-const TAB_NAME = ['RequestStack', 'ManageStack'];
+const TAB_NAME = ['RequestStack', 'ManageStack', 'ProfileStack'];
 const routeConfig = [
   {
-    icon: 'paper-plane',
+    icon: 'menu',
     title: 'Request',
   },
   {
-    icon: 'archive',
+    icon: 'book',
     title: 'Manage',
+  },
+  {
+    icon: 'user',
+    title: 'Profile',
   },
 ];
 
 const TabIcon = ({ icon, title, onPress, color }) => (
   <TouchableWithoutFeedback onPress={onPress} key={title}>
     <View>
-      <Icon name={icon} type="entypo" size={20} color={color} />
+      <Icon name={icon} type="feather" size={20} color={color} />
       <Text style={[textStyle.bodyText, { color }]}>{title}</Text>
     </View>
   </TouchableWithoutFeedback>

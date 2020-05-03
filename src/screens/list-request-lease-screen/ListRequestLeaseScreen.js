@@ -12,6 +12,7 @@ import { connect, useDispatch } from 'react-redux';
 
 import moment from 'moment';
 import { setPopUpData, cancelPopup } from '@redux/actions/app';
+import { formatDate } from 'Utils/date';
 import RequestLeaseItem from './RequestLeaseItem';
 
 type PropTypes = {
@@ -57,38 +58,66 @@ const ListRequestLeaseScreen = ({ leaseList, navigation }: PropTypes) => {
 
     navigation.navigate('RentDetailScreen', {
       data: [
-        { att: '_id', label: 'ID', value: selectedLease._id },
+        { att: '_id', label: 'ID', value: selectedLease._id, hide: true },
+        {
+          att: 'customer',
+          label: 'Customer',
+          detail: selectedLease.customer.fullName,
+          pressable: true,
+          onItemPress() {
+            setPopUpData(dispatch)({
+              popupType: 'profile',
+              description: selectedLease.customer,
+            });
+          },
+          nextIcon: 'next',
+        },
         {
           att: 'startDate',
           label: 'From date',
-          value: moment(selectedLease.startDate).format('DD/MMM/YYYY'),
+          detail: formatDate(selectedLease.startDate),
         },
         {
           att: 'endDate',
           label: 'To date',
-          value: moment(selectedLease.endDate).format('DD/MMM/YYYY'),
+          detail: formatDate(selectedLease.endDate),
         },
         {
           att: 'carId',
           label: 'Car model',
-          value: selectedLease.car.carModel.name,
+          detail: selectedLease.car.carModel.name,
         },
-        // { att: 'cost', label: 'Cost', value: selectedLease.totalCost },
         {
-          att: 'pickupLocation',
-          label: 'Hub location',
-          value: selectedLease.hub.address,
+          att: 'odometer',
+          label: 'Car model',
+          detail: selectedLease.car.odometer,
         },
-        { att: 'type', label: 'Type', value: 'Lease request' },
+        {
+          att: 'using',
+          label: 'Using years',
+          detail: selectedLease.car.usingYear,
+        },
+        // { att: 'cost', label: 'Cost', detail: selectedLease.totalCost },
+        // {
+        //   att: 'pickupLocation',
+        //   label: 'Hub location',
+        //   detail: selectedLease.hub.address,
+        // },
+        { att: 'type', label: 'Type', detail: 'Lease request' },
       ],
       avatar: selectedLease.customer.avatar,
       name: selectedLease.customer.fullName,
-      type: 'accept-decline',
+      type:
+        selectedLease.status === 'PENDING' ? 'accept-decline' : 'transaction',
       onConfirm() {
-        showConfirmPopup(selectedLease._id);
+        if (selectedLease.status === 'PENDING') {
+          showConfirmPopup(selectedLease._id);
+        } else {
+          navigation.navigate('ScanScreen', { id: selectedLease._id });
+        }
       },
       onDecline() {
-        showDeclinePopup(selectedLease._id);
+        showDeclinePopup(selectedLease._id, { id: selectedLease._id });
       },
     });
   };
@@ -135,11 +164,12 @@ const ListRequestLeaseScreen = ({ leaseList, navigation }: PropTypes) => {
       },
     });
   };
+  console.log('lease list: ', leaseList);
 
   return (
     <View style={{ flex: 1 }}>
       <FlatList
-        data={leaseList.filter(item => item.status === 'PENDING')}
+        data={leaseList.filter(item => item.status !== 'DECLINED')}
         renderItem={({ item }) => (
           <RequestLeaseItem
             data={item}

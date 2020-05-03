@@ -20,9 +20,9 @@ const RequestRentalItem = ({ onItemPress, data }: PropsType) => {
   return (
     <TouchableOpacity onPress={getDetail}>
       <View style={styles.container}>
-        <View style={styles.avtContainer}>
+        {/* <View style={styles.avtContainer}>
           <Avatar uri={data.customer.avatar} />
-        </View>
+        </View> */}
         <View style={styles.infoContainer}>
           <View>
             <Text style={textStyle.widgetItem}>{data.customer.fullName}</Text>
@@ -46,7 +46,7 @@ const styles = StyleSheet.create({
     borderBottomColor: colors.dark80,
     borderBottomWidth: 1,
     paddingHorizontal: scaleHor(12),
-    paddingVertical: scaleVer(12),
+    paddingVertical: scaleVer(8),
   },
   infoContainer: {
     paddingLeft: scaleHor(24),

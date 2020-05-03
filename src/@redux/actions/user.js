@@ -4,6 +4,7 @@ import {
   SIGN_IN_FAILURE,
   SIGN_IN_REQUEST,
   SIGN_IN_SUCCESS,
+  SIGN_OUT,
 } from '@redux/constants/user';
 
 export function signIn({ username, password }, callback = INITIAL_CALLBACK) {
@@ -13,7 +14,7 @@ export function signIn({ username, password }, callback = INITIAL_CALLBACK) {
       const result = await query({
         endpoint: 'account/login',
         method: METHODS.post,
-        data: { username, password },
+        data: { username, password, role: 'EMPLOYEE' },
       });
       if (result.status === STATUS.OK) {
         dispatch({ type: SIGN_IN_SUCCESS, payload: result.data });
@@ -28,4 +29,10 @@ export function signIn({ username, password }, callback = INITIAL_CALLBACK) {
       callback.onFailure();
     }
   };
+}
+
+export function signOut(dispatch) {
+  dispatch({
+    type: SIGN_OUT,
+  });
 }

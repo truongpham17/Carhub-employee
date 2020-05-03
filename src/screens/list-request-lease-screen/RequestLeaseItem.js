@@ -28,28 +28,41 @@ const RequestLeaseItem = ({
     onItemPress(data._id);
     // goToDetail(item.value);
   };
+  const getLabel = () => {
+    switch (data.status) {
+      case 'ACCEPTED':
+        return 'ACCEPTED';
+      case 'PENDING':
+        return 'PENDING';
+      case 'AVAILABLE':
+        return 'CURRENT';
+    }
+  };
   return (
     <TouchableOpacity
       onPress={() => onItemPress(data._id)}
       style={styles.button}
     >
       <View style={styles.container}>
-        <View style={styles.avtContainer}>
+        {/* <View style={styles.avtContainer}>
           <Avatar uri={data.customer.avatar} />
-        </View>
+        </View> */}
         <View style={styles.infoContainer}>
-          <View>
+          <View style={styles.title}>
             <Text style={textStyle.widgetItem}>{data.customer.fullName}</Text>
-            {/* <Text style={textStyle.bodyText}>ID: BR0001</Text> */}
-            <Text style={textStyle.bodyText}>{data.car.carModel.name}</Text>
-            <Text style={textStyle.bodyText}>
-              Duration: {moment(data.startDate).format('MMM DD')} -{' '}
-              {moment(data.endDate).format('MMM DD')}
+            <Text style={[textStyle.bodyTextBold, { color: colors.primary }]}>
+              {getLabel()}
             </Text>
           </View>
+
+          <Text style={textStyle.bodyText}>{data.car.carModel.name}</Text>
+          <Text style={textStyle.bodyText}>
+            Duration: {moment(data.startDate).format('MMM DD')} -{' '}
+            {moment(data.endDate).format('MMM DD')}
+          </Text>
         </View>
       </View>
-      <View style={{ flexDirection: 'row', marginTop: scaleVer(8) }}>
+      {/* <View style={{ flexDirection: 'row', marginTop: scaleVer(8) }}>
         <View style={{ flex: 1, marginEnd: scaleHor(8) }}>
           <Button
             label="Decline"
@@ -67,7 +80,7 @@ const RequestLeaseItem = ({
             style={{ height: 40, borderRadius: 20 }}
           />
         </View>
-      </View>
+      </View> */}
     </TouchableOpacity>
   );
 };
@@ -86,8 +99,13 @@ const styles = StyleSheet.create({
     borderBottomColor: colors.dark80,
     borderBottomWidth: 1,
     paddingHorizontal: scaleHor(12),
-    paddingVertical: scaleVer(12),
+    paddingVertical: scaleVer(8),
     marginVertical: scaleVer(8),
+  },
+  title: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'flex-end',
   },
 });
 

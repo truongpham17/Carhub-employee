@@ -18,6 +18,8 @@ import CarModelDetail from './carmodel-detail/CarModelDetailScreen';
 import CarDetailScreen from './car-detail-screen/CarDetailScreen';
 import EditCarScreen from './edit-car-screen/EditCarScreen';
 import ScanCarScreen from './scan-car-screen/ScanCarScreen';
+import AuthScreen from './auth-screen/AuthScreen';
+import ProfileScreen from './profile-screen/ProfileScreen';
 
 const RequestStack = createStackNavigator(
   {
@@ -40,23 +42,38 @@ const ManageStack = createStackNavigator(
     headerMode: 'none',
   }
 );
+const ProfileStack = createStackNavigator(
+  {
+    ProfileScreen,
+  },
+  {
+    headerMode: 'none',
+  }
+);
 
 const MainApp = createBottomTabNavigator(
   {
     RequestStack,
     ManageStack,
+    ProfileStack,
   },
   {
     tabBarComponent: Tabbar,
   }
 );
 
-const AuthStack = createStackNavigator({
-  SignInScreen,
-});
+const SignInStack = createStackNavigator(
+  {
+    SignInScreen,
+  },
+  {
+    headerMode: 'none',
+  }
+);
 
 const AppNavigation = createSwitchNavigator({
-  AuthStack,
+  AuthScreen,
+  SignInStack,
   MainApp,
 });
 

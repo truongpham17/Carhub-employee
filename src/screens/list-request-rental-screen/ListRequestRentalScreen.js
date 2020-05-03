@@ -3,8 +3,10 @@ import { View, Text, StyleSheet, FlatList } from 'react-native';
 import { ViewContainer } from 'Components';
 import { setSelectedRental, getRentalList } from '@redux/actions/rental';
 import { NavigationType, RentalType } from 'types';
-import { connect } from 'react-redux';
+import { connect, useDispatch } from 'react-redux';
 import moment from 'moment';
+import { formatDate, formatPrice } from 'Utils/date';
+import { setPopUpData } from '@redux/actions';
 import RequestRentalItem from './RequestRentalItem';
 
 type PropsType = {
@@ -12,6 +14,7 @@ type PropsType = {
   rentalList: [RentalType],
   setSelectedRental: string => void,
   getRentalList: () => void,
+  search: string,
 };
 
 const ListRequestRentalScreen = ({
@@ -19,13 +22,20 @@ const ListRequestRentalScreen = ({
   rentalList,
   setSelectedRental,
   getRentalList,
+  search = '',
 }: PropsType) => {
+  const dispatch = useDispatch();
   const [refreshing, setRefreshing] = useState(true);
   useEffect(() => {
-    navigation.addListener('didFocus', () => setRefreshing(true));
     if (refreshing) {
-      getRentalList();
-      setRefreshing(false);
+      getRentalList({
+        success() {
+          setRefreshing(false);
+        },
+        failure() {
+          setRefreshing(false);
+        },
+      });
     }
   }, [refreshing]);
   const onItemPress = _id => {
@@ -33,34 +43,49 @@ const ListRequestRentalScreen = ({
     const selectedRental = rentalList.find(item => item._id === _id);
     navigation.navigate('RentDetailScreen', {
       data: [
-        { att: '_id', label: 'ID', value: selectedRental._id },
+        {
+          att: 'customer',
+          label: 'Customer',
+          detail: selectedRental.customer.fullName,
+          pressable: true,
+          onItemPress() {
+            setPopUpData(dispatch)({
+              popupType: 'profile',
+              description: selectedRental.customer,
+            });
+          },
+          nextIcon: 'next',
+        },
+
+        { att: '_id', label: 'ID', detail: selectedRental._id, hide: true },
         {
           att: 'startDate',
           label: 'From date',
-          value: moment(selectedRental.startDate).format('DD/MMM/YYYY'),
+          detail: formatDate(selectedRental.startDate),
         },
         {
           att: 'endDate',
           label: 'To date',
-          value: moment(selectedRental.endDate).format('DD/MMM/YYYY'),
+          detail: formatDate(selectedRental.endDate),
         },
         {
           att: 'carId',
           label: 'Car model',
-          value: selectedRental.carModel.name,
+          detail: selectedRental.carModel.name,
         },
-        { att: 'cost', label: 'Cost', value: selectedRental.totalCost },
         {
-          att: 'pickupLocation',
-          label: 'Pick up location',
-          value: selectedRental.pickupHub.address,
+          att: 'cost',
+          label: 'Price',
+          detail: formatPrice(selectedRental.totalCost),
         },
-        { value: 'Waiting for hire' },
+        { detail: 'Waiting for hire', att: 'status', label: 'Type' },
       ],
       avatar: selectedRental.customer.avatar,
       name: selectedRental.customer.fullName,
-      type: 'decline',
-      onConfirm: () => {},
+      type: 'decline-transaction',
+      onConfirm: () => {
+        navigation.navigate('ScanScreen');
+      },
       onDecline: () => {},
     });
     setRefreshing(true);
@@ -74,7 +99,7 @@ const ListRequestRentalScreen = ({
     <FlatList
       refreshing={refreshing}
       onRefresh={() => setRefreshing(true)}
-      data={rentalList}
+      data={rentalList.filter(item => item.customer.fullName.includes(search))}
       renderItem={renderItem}
       keyExtractor={(item, index) => index}
       showsVerticalScrollIndicator={false}
