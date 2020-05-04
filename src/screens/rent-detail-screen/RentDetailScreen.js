@@ -81,6 +81,28 @@ const RentDetailScreen = ({ navigation }: PropsType) => {
             <Button label="Confirm transaction" onPress={onConfirm} />
           </View>
         );
+      case 'transaction-accept-decline':
+        return (
+          <View
+            style={{
+              marginVertical: scaleVer(12),
+              flex: 1,
+              justifyContent: 'flex-end',
+            }}
+          >
+            <Button
+              label="Confirm transaction"
+              onPress={onConfirm}
+              style={{ marginBottom: scaleVer(8) }}
+            />
+            <Button
+              label="Reject transaction"
+              onPress={onDecline}
+              colorStart={colors.errorLight}
+              colorEnd={colors.error}
+            />
+          </View>
+        );
       case 'transaction':
         return (
           <View
@@ -90,9 +112,14 @@ const RentDetailScreen = ({ navigation }: PropsType) => {
               justifyContent: 'flex-end',
             }}
           >
-            <Button label="Confirm transaction" onPress={onConfirm} />
+            <Button
+              label="Confirm transaction"
+              onPress={onConfirm}
+              style={{ marginBottom: scaleVer(8) }}
+            />
           </View>
         );
+
       default:
         return null;
     }

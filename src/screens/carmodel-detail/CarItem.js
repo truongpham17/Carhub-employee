@@ -20,9 +20,15 @@ const CarItem = ({ number, onItemPress, type }: CarItemTypes) => (
     onPress={onItemPress}
   >
     <Text style={textStyle.bodyText}>
-      License plates: <Text style={textStyle.bodyTextBold}>{number}</Text>
+      <Text style={textStyle.bodyTextBold}>License plates: </Text>
+      {number}
     </Text>
-    <Text style={textStyle.label}>{type}</Text>
+
+    <Text style={textStyle.bodyText}>
+      <Text style={textStyle.bodyTextBold}>Car type: </Text>
+      {type}
+    </Text>
+
     <Separator />
   </TouchableOpacity>
 );

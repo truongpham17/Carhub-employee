@@ -28,16 +28,8 @@ const RequestLeaseItem = ({
     onItemPress(data._id);
     // goToDetail(item.value);
   };
-  const getLabel = () => {
-    switch (data.status) {
-      case 'ACCEPTED':
-        return 'ACCEPTED';
-      case 'PENDING':
-        return 'PENDING';
-      case 'AVAILABLE':
-        return 'CURRENT';
-    }
-  };
+
+  const label = getLabel(data.status);
   return (
     <TouchableOpacity
       onPress={() => onItemPress(data._id)}
@@ -50,8 +42,8 @@ const RequestLeaseItem = ({
         <View style={styles.infoContainer}>
           <View style={styles.title}>
             <Text style={textStyle.widgetItem}>{data.customer.fullName}</Text>
-            <Text style={[textStyle.bodyTextBold, { color: colors.primary }]}>
-              {getLabel()}
+            <Text style={[textStyle.bodyTextBold, { color: label.color }]}>
+              {label.content}
             </Text>
           </View>
 
@@ -62,27 +54,23 @@ const RequestLeaseItem = ({
           </Text>
         </View>
       </View>
-      {/* <View style={{ flexDirection: 'row', marginTop: scaleVer(8) }}>
-        <View style={{ flex: 1, marginEnd: scaleHor(8) }}>
-          <Button
-            label="Decline"
-            colorStart={colors.errorLight}
-            colorEnd={colors.error}
-            onPress={onDecline}
-            style={{ height: 40, borderRadius: 20 }}
-          />
-        </View>
-
-        <View style={{ flex: 1, marginStart: scaleHor(8) }}>
-          <Button
-            label="Accept"
-            onPress={onAccept}
-            style={{ height: 40, borderRadius: 20 }}
-          />
-        </View>
-      </View> */}
     </TouchableOpacity>
   );
+};
+
+const getLabel = status => {
+  switch (status) {
+    // case 'ACCEPTED':
+    //   return { content: 'ACCEPTED', color: colors.primary };
+    // case 'PENDING':
+    //   return { content: 'PENDING', color: colors.primary };
+    // case 'AVAILABLE':
+    //   return { content: 'AVAILABLE', color: colors.primary };
+    case 'DECLINED':
+      return { content: 'DECLINED', color: colors.error };
+    default:
+      return { content: status, color: colors.primary };
+  }
 };
 
 const styles = StyleSheet.create({

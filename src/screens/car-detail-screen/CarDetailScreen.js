@@ -16,6 +16,7 @@ import colors from 'Constants/colors';
 import { scaleHor, scaleVer } from 'Constants/dimensions';
 import moment from 'moment';
 
+import { setPopUpData, cancelPopup } from '@redux/actions';
 import EditCar from './EditCar';
 
 type PropTypes = {
@@ -33,11 +34,15 @@ const CarDetailScreen = ({ navigation }: PropTypes) => {
     state => state.statistic.loadingRemoveCar
   );
   const hub = useSelector(state => state.statistic.hub);
+
   const allCarFromHub: [CarType] = useSelector(
     state => state.statistic.allCarFromHub
   );
 
-  const selectedCar = allCarFromHub.find(car => car._id === selectedId) || {
+  console.log(allCarFromHub);
+  const selectedCar: CarType = allCarFromHub.find(
+    car => car._id === selectedId
+  ) || {
     carModel: {},
   };
 
@@ -54,12 +59,29 @@ const CarDetailScreen = ({ navigation }: PropTypes) => {
     setConfirmVisible(false);
     removeCar(dispatch)(selectedId, {
       onSuccess() {
-        navigation.goBack();
+        // navigation.navigate('ManageScreen');
+        navigation.pop();
 
         getHubCarList(dispatch)({});
       },
       onFailure() {
         console.log('error');
+      },
+    });
+  };
+
+  const showRemoveButton = () =>
+    selectedCar.customer || selectedCar.hub !== hub._id;
+  console.log(selectedCar);
+
+  const onRemoveAsk = () => {
+    setPopUpData(dispatch)({
+      popupType: 'confirm',
+      title: 'Remove car',
+      description: 'Are you sure you want to remove this car',
+      onConfirm() {
+        cancelPopup(dispatch);
+        handleRemoveCar();
       },
     });
   };
@@ -72,6 +94,22 @@ const CarDetailScreen = ({ navigation }: PropTypes) => {
       loading={loading || loadingRemoveCar}
     >
       <ScrollView>
+        {selectedCar.customer && (
+          <ListItem
+            type="detail"
+            label="Customer"
+            detail={selectedCar.customer.fullName}
+            pressable
+            onItemPress={() => {
+              setPopUpData(dispatch)({
+                popupType: 'profile',
+                description: selectedCar.customer,
+              });
+            }}
+            nextIcon="next"
+            showSeparator
+          />
+        )}
         <ListItem
           type="detail"
           label="Model"
@@ -116,39 +154,17 @@ const CarDetailScreen = ({ navigation }: PropTypes) => {
         }}
       >
         <View style={{ flex: 1, marginEnd: scaleHor(8) }}>
-          <Button
-            label="Remove"
-            colorStart={colors.errorLight}
-            colorEnd={colors.error}
-            disable={selectedCar.customer || selectedCar.hub !== hub._id}
-            onPress={() => setConfirmVisible(true)}
-          />
+          {!showRemoveButton() && (
+            <Button
+              label="Remove"
+              colorStart={colors.errorLight}
+              colorEnd={colors.error}
+              disable={selectedCar.customer || selectedCar.hub !== hub._id}
+              onPress={onRemoveAsk}
+            />
+          )}
         </View>
-
-        {/* <View style={{ flex: 1, marginStart: scaleHor(8) }}>
-          <Button label="Edit" onPress={() => setModalVisible(true)} />
-        </View> */}
       </View>
-      {/* <ModalContainer
-        modalVisible={modalVisible}
-        onClose={() => setModalVisible(false)}
-      >
-        <EditCar
-          dataProps={{
-            usingYear: selectedCar.usingYear,
-            odometer: selectedCar.odometer,
-          }}
-          onSave={handleEditCar}
-        />
-      </ModalContainer> */}
-
-      <ConfirmPopup
-        title="Confirm remove car"
-        description="Are you sure you want to remove this car from your hub?"
-        modalVisible={confirmVisible}
-        onClose={() => setConfirmVisible(false)}
-        onConfirm={handleRemoveCar}
-      />
     </ViewContainer>
   );
 };

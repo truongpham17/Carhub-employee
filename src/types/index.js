@@ -78,7 +78,7 @@ export type CarType = {
   isActive: Boolean,
   _id: String,
   carModel: CarModel,
-  customer: String,
+  customer: UserType,
   hub: HubType,
   currentHub: HubType,
   images: [String],
@@ -157,6 +157,7 @@ export type LeaseType = {
   startDate: Date,
   endDate: Date,
   hub: HubType,
+  message: string,
   status:
     | 'PENDING'
     | 'ACCEPTED'

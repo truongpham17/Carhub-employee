@@ -13,17 +13,26 @@ import { connect, useDispatch } from 'react-redux';
 import moment from 'moment';
 import { setPopUpData, cancelPopup } from '@redux/actions/app';
 import { formatDate } from 'Utils/date';
+import QuestionPopup from './QuestionPopup';
 import RequestLeaseItem from './RequestLeaseItem';
+import { getData, getActionType } from './utils';
 
 type PropTypes = {
   leaseList: [LeaseType],
   setSelectedLease: string => void,
   navigation: NavigationType,
+  search: string,
 };
 
-const ListRequestLeaseScreen = ({ leaseList, navigation }: PropTypes) => {
+const ListRequestLeaseScreen = ({
+  leaseList,
+  navigation,
+  search = '',
+}: PropTypes) => {
   const dispatch = useDispatch();
   const [refresh, setRefresh] = useState(false);
+  const [selectedId, setSelectedId] = useState(null);
+  const [questionVisible, setQuestionVisible] = useState(false);
 
   useEffect(() => {
     getLeaseList(dispatch)();
@@ -54,70 +63,52 @@ const ListRequestLeaseScreen = ({ leaseList, navigation }: PropTypes) => {
     );
   };
   const onItemPress = _id => {
+    setSelectedId(_id);
     const selectedLease = leaseList.find(item => item._id === _id);
 
     navigation.navigate('RentDetailScreen', {
-      data: [
-        { att: '_id', label: 'ID', value: selectedLease._id, hide: true },
-        {
-          att: 'customer',
-          label: 'Customer',
-          detail: selectedLease.customer.fullName,
-          pressable: true,
-          onItemPress() {
-            setPopUpData(dispatch)({
-              popupType: 'profile',
-              description: selectedLease.customer,
-            });
-          },
-          nextIcon: 'next',
-        },
-        {
-          att: 'startDate',
-          label: 'From date',
-          detail: formatDate(selectedLease.startDate),
-        },
-        {
-          att: 'endDate',
-          label: 'To date',
-          detail: formatDate(selectedLease.endDate),
-        },
-        {
-          att: 'carId',
-          label: 'Car model',
-          detail: selectedLease.car.carModel.name,
-        },
-        {
-          att: 'odometer',
-          label: 'Car model',
-          detail: selectedLease.car.odometer,
-        },
-        {
-          att: 'using',
-          label: 'Using years',
-          detail: selectedLease.car.usingYear,
-        },
-        // { att: 'cost', label: 'Cost', detail: selectedLease.totalCost },
-        // {
-        //   att: 'pickupLocation',
-        //   label: 'Hub location',
-        //   detail: selectedLease.hub.address,
-        // },
-        { att: 'type', label: 'Type', detail: 'Lease request' },
-      ],
-      avatar: selectedLease.customer.avatar,
-      name: selectedLease.customer.fullName,
-      type:
-        selectedLease.status === 'PENDING' ? 'accept-decline' : 'transaction',
+      data: getData(selectedLease, dispatch),
+      type: getActionType(selectedLease),
       onConfirm() {
-        if (selectedLease.status === 'PENDING') {
-          showConfirmPopup(selectedLease._id);
-        } else {
-          navigation.navigate('ScanScreen', { id: selectedLease._id });
-        }
+        onConfirmTransaction(selectedLease);
       },
       onDecline() {
-        showDeclinePopup(selectedLease._id, { id: selectedLease._id });
+        onDeclineRequest(selectedLease);
+      },
+    });
+  };
+
+  const onConfirmTransaction = (selectedLease: LeaseType) => {
+    switch (selectedLease.status) {
+      case 'PENDING':
+        return showConfirmPopup(selectedLease._id);
+      case 'ACCEPTED':
+        return navigation.navigate('ScanScreen', { id: selectedLease._id });
+      case 'WAIT_TO_RETURN':
+        return navigation.navigate('ScanScreen', { id: selectedLease._id });
+    }
+  };
+
+  const onReturnCar = () => {};
+
+  const onDeclineRequest = (selectedLease: LeaseType) => {
+    if (selectedLease.status === 'PENDING') {
+      return showDeclinePopup(selectedLease._id);
+    }
+    if (selectedLease.status === 'ACCEPTED') {
+      return showRejectTransaction(selectedLease._id);
+    }
+  };
+
+  const showRejectTransaction = () => {
+    setPopUpData(dispatch)({
+      title: 'Reject receive car',
+      description: 'Are you sure to reject receive this car?',
+      onConfirm() {
+        cancelPopup(dispatch);
+        setTimeout(() => {
+          setQuestionVisible(true);
+        }, 200);
       },
     });
   };
@@ -164,12 +155,11 @@ const ListRequestLeaseScreen = ({ leaseList, navigation }: PropTypes) => {
       },
     });
   };
-  console.log('lease list: ', leaseList);
 
   return (
     <View style={{ flex: 1 }}>
       <FlatList
-        data={leaseList.filter(item => item.status !== 'DECLINED')}
+        data={leaseList.filter(item => item.customer.fullName.includes(search))}
         renderItem={({ item }) => (
           <RequestLeaseItem
             data={item}
@@ -183,6 +173,14 @@ const ListRequestLeaseScreen = ({ leaseList, navigation }: PropTypes) => {
         showsVerticalScrollIndicator={false}
         onRefresh={onRefresh}
         refreshing={refresh}
+      />
+      <QuestionPopup
+        modalVisible={questionVisible}
+        onClose={() => setQuestionVisible(false)}
+        onSubmit={message => {
+          declineLeaseRequest(dispatch)({ id: selectedId, message });
+          setQuestionVisible(false);
+        }}
       />
     </View>
   );

@@ -18,9 +18,6 @@ import {
   GET_CAR_FAILURE,
   GET_CAR_REQUEST,
   GET_CAR_SUCCESS,
-  CHECK_AVAILABLE_CAR_REQUEST,
-  CHECK_AVAILABLE_CAR_SUCCESS,
-  CHECK_AVAILABLE_CAR_FAILURE,
 } from '../constants/statistic';
 
 export const getHubCarList = dispatch => async (

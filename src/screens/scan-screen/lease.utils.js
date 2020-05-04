@@ -48,7 +48,7 @@ function getLeaseData(lease: LeaseType, type: string) {
   };
 }
 
-function listenFirebaseStatus({ lease, dispatch }) {
+function listenFirebaseStatus({ lease, dispatch, navigation }) {
   firebase
     .database()
     .ref(`scanQRCode/${lease._id}`)
@@ -60,6 +60,8 @@ function listenFirebaseStatus({ lease, dispatch }) {
             title: 'Transaction success',
             description: 'Return car to user successfully',
           });
+          navigation.navigate('ListRequestLeaseScreen');
+          getLeaseList(dispatch)();
           break;
         case USER_CANCEL:
           setPopUpData(dispatch)({
@@ -113,7 +115,7 @@ function handleProcessLeaseTransaction({ lease, navigation, dispatch }) {
         onConfirm() {
           cancelPopup(dispatch);
           changeTransactionStatus(lease._id, WAITING_FOR_USER_CONFIRM);
-          listenFirebaseStatus({ dispatch, lease });
+          listenFirebaseStatus({ dispatch, lease, navigation });
         },
       });
       break;
