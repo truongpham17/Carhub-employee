@@ -84,7 +84,7 @@ const ListRequestRentalScreen = ({
       name: selectedRental.customer.fullName,
       type: 'decline-transaction',
       onConfirm: () => {
-        navigation.navigate('ScanScreen');
+        navigation.navigate('ScanScreen', { id: selectedRental._id });
       },
       onDecline: () => {},
     });

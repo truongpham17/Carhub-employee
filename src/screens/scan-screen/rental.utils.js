@@ -100,6 +100,7 @@ function handleProcessRentalTransaction({ rental, navigation, dispatch }) {
       navigation.navigate('ScanCarScreen', {
         callback() {
           listenFirebaseStatus({ rental, dispatch, navigation });
+          navigation.pop();
         },
       });
       break;
@@ -154,15 +155,17 @@ export default function processRentalRequest({
   if (TRANSACTION_RENTAL.includes(selectedRental.status)) {
     actionType = 'transaction';
   }
-  navigation.navigate('RentDetailScreen', {
-    ...getRentalData(selectedRental, actionType),
-    onConfirm() {
-      handleProcessRentalTransaction({
-        rental: selectedRental,
-        navigation,
-        dispatch,
-      });
-    },
-    onDecline() {},
+  handleProcessRentalTransaction({
+    rental: selectedRental,
+    navigation,
+    dispatch,
   });
+
+  // navigation.navigate('RentDetailScreen', {
+  //   ...getRentalData(selectedRental, actionType),
+  //   onConfirm() {
+
+  //   },
+  //   onDecline() {},
+  // });
 }
