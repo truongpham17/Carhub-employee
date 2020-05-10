@@ -56,7 +56,19 @@ const ScanCarScreen = ({ navigation }: PropTypes) => {
           title: 'Caution!',
           description:
             'This car is not match to the car model user request. Continue?',
-          onConfirm() {},
+          onConfirm() {
+            // changeTransactionStatus(
+            //   rental._id,
+            //   WAITING_FOR_USER_CONFIRM,
+            //   car._id
+            // );
+            // setPopUpData(dispatch)({
+            //   popupType: 'confirm',
+            //   acceptOnly: true,
+            //   title: 'Wait for user confirm',
+            // });
+            // callback();
+          },
         };
       case RENTAL_CAR_ALREADY_IN_USE:
         return {
@@ -64,6 +76,28 @@ const ScanCarScreen = ({ navigation }: PropTypes) => {
           confirmLabel: 'Scan again',
         };
     }
+  };
+
+  const onConfirmCar = car => {
+    navigation.pop();
+    setPopUpData(dispatch)({
+      popupType: 'confirm',
+      title: `Car detail`,
+      description: `Car model: ${car.carModel.name}\nLicense plates: ${car.licensePlates}\nConfirm?`,
+      onConfirm() {
+        changeTransactionStatus(rental._id, WAITING_FOR_USER_CONFIRM, car._id);
+        setPopUpData(dispatch)({
+          popupType: 'confirm',
+          acceptOnly: true,
+          title: 'Wait for user confirm',
+        });
+        callback();
+      },
+      onDecline() {
+        cancelPopup(dispatch);
+        setBarcode(null);
+      },
+    });
   };
 
   const barcodeRecognize = barcodes => {
@@ -78,29 +112,18 @@ const ScanCarScreen = ({ navigation }: PropTypes) => {
         { id: data._id, rentalId: rental._id },
         {
           onSuccess(car) {
-            navigation.pop();
-            setPopUpData(dispatch)({
-              popupType: 'confirm',
-              title: `Car detail`,
-              description: `Car model: ${car.carModel.name}\nLicense plates: ${car.licensePlates}\nConfirm?`,
-              onConfirm() {
-                changeTransactionStatus(
-                  rental._id,
-                  WAITING_FOR_USER_CONFIRM,
-                  car._id
-                );
-                setPopUpData(dispatch)({
-                  popupType: 'confirm',
-                  acceptOnly: true,
-                  title: 'Wait for user confirm',
-                });
-                callback();
-              },
-              onDecline() {
-                cancelPopup(dispatch);
-                setBarcode(null);
-              },
-            });
+            if (car.isNotMatch) {
+              setPopUpData(dispatch)({
+                title: 'Caution!',
+                description:
+                  'This car is not match to the car model user request. Continue?',
+                onConfirm() {
+                  onConfirmCar(car);
+                },
+              });
+              return;
+            }
+            onConfirmCar(car);
           },
           onFailure(errorCode) {
             const popupData = handleError(errorCode);

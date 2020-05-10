@@ -1,13 +1,15 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import { ViewContainer, ListItem, Button } from 'Components';
+import { ViewContainer, ListItem, Button, ImageSlider } from 'Components';
 // import { NavigationType, RentalType } from 'types';
 import { Avatar } from 'react-native-elements';
+import { LeaseType } from 'types';
 import { textStyle } from 'Constants/textStyles';
 import { scaleVer, scaleHor } from 'Constants/dimensions';
 import colors from 'Constants/colors';
 
 import { useSelector } from 'react-redux';
+import { dimension } from 'Constants';
 // import moment from 'moment';
 
 type PropsType = {
@@ -15,11 +17,11 @@ type PropsType = {
     state: {
       params: {
         data: [{ label: string, value: string }],
-        avatar: String,
-        name: String,
         type: 'accept-decline' | 'decline' | 'transaction',
         onConfirm: () => void,
         onDecline: () => void,
+        requestType: 'lease' | 'rental',
+        detail: LeaseType,
       },
     },
     goBack: () => void,
@@ -29,13 +31,21 @@ type PropsType = {
 };
 
 const RentDetailScreen = ({ navigation }: PropsType) => {
-  const { data, type, onConfirm, onDecline } = navigation.state.params;
+  const {
+    data,
+    type,
+    onConfirm,
+    onDecline,
+    requestType,
+    detail,
+  } = navigation.state.params;
 
   const loading = useSelector(state => state.lease.loading);
 
   const handleBackPress = () => {
     navigation.goBack();
   };
+  console.log(type);
 
   const renderAction = () => {
     switch (type) {
@@ -71,6 +81,7 @@ const RentDetailScreen = ({ navigation }: PropsType) => {
               justifyContent: 'flex-end',
             }}
           >
+            <Button label="Confirm transaction" onPress={onConfirm} />
             <Button
               label="Decline request"
               colorStart={colors.errorLight}
@@ -78,10 +89,9 @@ const RentDetailScreen = ({ navigation }: PropsType) => {
               onPress={onDecline}
               style={styles.button}
             />
-            <Button label="Confirm transaction" onPress={onConfirm} />
           </View>
         );
-      case 'transaction-accept-decline':
+      case 'transaction':
         return (
           <View
             style={{
@@ -103,7 +113,25 @@ const RentDetailScreen = ({ navigation }: PropsType) => {
             />
           </View>
         );
-      case 'transaction':
+      case 'decline':
+        return (
+          <View
+            style={{
+              marginVertical: scaleVer(12),
+              flex: 1,
+              justifyContent: 'flex-end',
+            }}
+          >
+            <Button
+              label="Decline request"
+              colorStart={colors.errorLight}
+              colorEnd={colors.error}
+              onPress={onDecline}
+              style={styles.button}
+            />
+          </View>
+        );
+      case 'transaction-accept':
         return (
           <View
             style={{
@@ -115,7 +143,7 @@ const RentDetailScreen = ({ navigation }: PropsType) => {
             <Button
               label="Confirm transaction"
               onPress={onConfirm}
-              style={{ marginBottom: scaleVer(8) }}
+              style={styles.button}
             />
           </View>
         );
@@ -131,9 +159,10 @@ const RentDetailScreen = ({ navigation }: PropsType) => {
       haveBackHeader
       onBackPress={handleBackPress}
       scrollable
-      style={{ flex: 1 }}
       loading={loading}
+      containerStyle={{ minHeight: dimension.SCREEN_HEIGHT }}
     >
+      {requestType === 'lease' && <ImageSlider images={detail.car.images} />}
       <View style={{ flex: 1 }}>
         <View>
           {data.map(

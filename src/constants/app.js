@@ -13,3 +13,17 @@ export const LEASE_REJECT_REASONS = [
   'Fraud or harassment',
   'Other reasons',
 ];
+
+export const RENTAL_REJECT_REASONS = [
+  'Run out of car',
+  'User provided wrong information',
+  'Fraud or harassment',
+  'Other reasons',
+];
+
+export const LEASE_REQUEST_DECLINE_REASONS = [
+  'Lack of car images',
+  'Invalid information',
+  'The car is too old',
+  'Other reasons',
+];

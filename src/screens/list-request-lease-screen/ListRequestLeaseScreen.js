@@ -13,6 +13,7 @@ import { connect, useDispatch } from 'react-redux';
 import moment from 'moment';
 import { setPopUpData, cancelPopup } from '@redux/actions/app';
 import { formatDate } from 'Utils/date';
+import { LEASE_REQUEST_DECLINE_REASONS } from 'Constants/app';
 import QuestionPopup from './QuestionPopup';
 import RequestLeaseItem from './RequestLeaseItem';
 import { getData, getActionType } from './utils';
@@ -41,6 +42,7 @@ const ListRequestLeaseScreen = ({
   const onConfirmItem = id => {
     acceptLeaseRequest(dispatch)(id, {
       onSuccess() {
+        getLeaseList(dispatch)();
         navigation.navigate('RequestScreen');
       },
       onFailure() {
@@ -68,7 +70,9 @@ const ListRequestLeaseScreen = ({
 
     navigation.navigate('RentDetailScreen', {
       data: getData(selectedLease, dispatch),
-      type: getActionType(selectedLease),
+      detail: selectedLease,
+      requestType: 'lease',
+      type: getActionType(selectedLease, true),
       onConfirm() {
         onConfirmTransaction(selectedLease);
       },
@@ -118,7 +122,6 @@ const ListRequestLeaseScreen = ({
       title: 'Decline request',
       description: 'Are you sure to decline this request?',
       onConfirm() {
-        console.log('hello this is great');
         setPopUpData(dispatch)({
           title: 'Input reason to decline',
           description: 'Reason',
@@ -130,6 +133,15 @@ const ListRequestLeaseScreen = ({
         });
       },
     });
+    // setPopUpData(dispatch)({
+    //   popupType: 'survey',
+    //   title: 'Reason to decline',
+    //   description: LEASE_REQUEST_DECLINE_REASONS,
+    //   onConfirm(msg) {
+    //     onDeclineItem(id, msg);
+    //     cancelPopup(dispatch);
+    //   },
+    // });
   };
 
   const showConfirmPopup = id => {
@@ -156,10 +168,14 @@ const ListRequestLeaseScreen = ({
     });
   };
 
+  const dataSortAndFilter = leaseList
+    .sort((a, b) => b.updatedAt - a.updatedAt)
+    .filter(item => item.customer.fullName.includes(search));
+
   return (
     <View style={{ flex: 1 }}>
       <FlatList
-        data={leaseList.filter(item => item.customer.fullName.includes(search))}
+        data={dataSortAndFilter}
         renderItem={({ item }) => (
           <RequestLeaseItem
             data={item}

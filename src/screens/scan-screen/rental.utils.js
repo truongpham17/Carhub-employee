@@ -7,11 +7,14 @@ import {
   USER_CANCEL,
   TRANSACTION_ERROR,
   CANCEL,
+  HUB_REJECT_TRASACTION,
 } from 'Constants/status';
 import { setPopUpData, cancelPopup } from '@redux/actions/app';
 import firebase from 'react-native-firebase';
 import { formatDate } from 'Utils/date';
-import { confirmTransaction } from '@redux/actions';
+import { confirmTransaction, getRentalList } from '@redux/actions';
+import { LEASE_REJECT_REASONS, RENTAL_REJECT_REASONS } from 'Constants/app';
+import { getData, getActionType } from '../list-request-rental-screen/utils';
 
 const TRANSACTION_RENTAL = ['UPCOMING', 'CURRENT'];
 function getRentalLabel(rental: RentalType) {
@@ -23,43 +26,43 @@ function getRentalLabel(rental: RentalType) {
       return 'Return car';
   }
 }
-function getRentalData(rental: RentalType, type: String) {
-  return {
-    data: [
-      {
-        att: 'user',
-        label: 'Customer',
-        detail: rental.customer.fullName,
-        pressable: true,
-      },
-      {
-        att: 'startDate',
-        label: 'From date',
-        detail: formatDate(rental.startDate),
-      },
-      {
-        att: 'endDate',
-        label: 'To date',
-        detail: formatDate(rental.endDate),
-      },
-      {
-        att: 'carId',
-        label: 'Car model',
-        detail: rental.carModel.name,
-      },
-      { att: 'cost', label: 'Cost', detail: rental.totalCost },
-      {
-        att: 'pickupLocation',
-        label: 'Pick up location',
-        detail: rental.pickupHub.address,
-      },
-      { att: 'type', label: 'Type', detail: getRentalLabel(rental) },
-    ],
-    avatar: rental.customer.avatar,
-    name: rental.customer.fullName,
-    type,
-  };
-}
+// function getRentalData(rental: RentalType, type: String) {
+//   return {
+//     data: [
+//       {
+//         att: 'user',
+//         label: 'Customer',
+//         detail: rental.customer.fullName,
+//         pressable: true,
+//       },
+//       {
+//         att: 'startDate',
+//         label: 'From date',
+//         detail: formatDate(rental.startDate),
+//       },
+//       {
+//         att: 'endDate',
+//         label: 'To date',
+//         detail: formatDate(rental.endDate),
+//       },
+//       {
+//         att: 'carId',
+//         label: 'Car model',
+//         detail: rental.carModel.name,
+//       },
+//       { att: 'cost', label: 'Cost', detail: rental.totalCost },
+//       {
+//         att: 'pickupLocation',
+//         label: 'Pick up location',
+//         detail: rental.pickupHub.address,
+//       },
+//       { att: 'type', label: 'Type', detail: getRentalLabel(rental) },
+//     ],
+//     avatar: rental.customer.avatar,
+//     name: rental.customer.fullName,
+//     type,
+//   };
+// }
 
 function listenFirebaseStatus({ rental, dispatch, navigation }) {
   firebase
@@ -69,6 +72,7 @@ function listenFirebaseStatus({ rental, dispatch, navigation }) {
       switch (snapShot.val().status) {
         case COMPLETED:
           navigation.pop(2);
+          getRentalList(dispatch)();
           setPopUpData(dispatch)({
             popupType: 'success',
             title: 'Transaction success',
@@ -77,6 +81,7 @@ function listenFirebaseStatus({ rental, dispatch, navigation }) {
           break;
         case USER_CANCEL:
           navigation.pop(2);
+          getRentalList(dispatch)();
           setPopUpData(dispatch)({
             popupType: 'error',
             title: 'Transaction denined',
@@ -84,6 +89,7 @@ function listenFirebaseStatus({ rental, dispatch, navigation }) {
           });
           break;
         case TRANSACTION_ERROR:
+          getRentalList(dispatch)();
           setPopUpData(dispatch)({
             popupType: 'error',
             title: 'Transaction error',
@@ -100,12 +106,13 @@ function handleProcessRentalTransaction({ rental, navigation, dispatch }) {
       navigation.navigate('ScanCarScreen', {
         callback() {
           listenFirebaseStatus({ rental, dispatch, navigation });
-          navigation.pop();
+          // navigation.pop();
         },
       });
       break;
     case 'CURRENT':
     case 'OVERDUE':
+    case 'SHARED':
       setPopUpData(dispatch)({
         title: 'Confirm get car',
         description: `Confirm get the ${rental.car.carModel.name} with license plates ${rental.car.licensePlates}?`,
@@ -150,22 +157,56 @@ export default function processRentalRequest({
 }) {
   changeTransactionStatus(transactionInfo._id, WAITING_FOR_CONFIRM);
 
-  let actionType = 'none';
   const selectedRental: RentalType = { ...transactionInfo };
-  if (TRANSACTION_RENTAL.includes(selectedRental.status)) {
-    actionType = 'transaction';
-  }
-  handleProcessRentalTransaction({
-    rental: selectedRental,
-    navigation,
-    dispatch,
+
+  navigation.navigate('RentDetailScreen', {
+    data: getData(selectedRental, dispatch),
+    type: getActionType(selectedRental),
+    onConfirm() {
+      handleProcessRentalTransaction({
+        rental: selectedRental,
+        navigation,
+        dispatch,
+      });
+    },
+    onDecline() {
+      setPopUpData(dispatch)({
+        popupType: 'confirm',
+        title: 'Reject transaction',
+        description: 'Are you sure to reject this transaction?',
+        onConfirm() {
+          setPopUpData(dispatch)({
+            title: 'Input reason to decline',
+            description: 'Reason',
+            popupType: 'prompt',
+            onConfirm(message) {
+              cancelPopup(dispatch);
+              changeTransactionStatus(
+                selectedRental._id,
+                HUB_REJECT_TRASACTION
+              );
+              confirmTransaction(dispatch)(
+                {
+                  id: selectedRental._id,
+                  toStatus: 'DECLINED',
+                  type: 'rental',
+                  message,
+                },
+                {
+                  onSuccess() {
+                    getRentalList(dispatch)();
+                    navigation.pop(2);
+                  },
+                  onFailure() {
+                    getRentalList(dispatch)();
+                    navigation.pop(2);
+                  },
+                }
+              );
+            },
+          });
+        },
+      });
+    },
   });
-
-  // navigation.navigate('RentDetailScreen', {
-  //   ...getRentalData(selectedRental, actionType),
-  //   onConfirm() {
-
-  //   },
-  //   onDecline() {},
-  // });
 }

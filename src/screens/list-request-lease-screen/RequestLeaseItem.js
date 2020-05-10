@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import { scaleHor, scaleVer } from 'Constants/dimensions';
 import { LeaseType, NavigationType } from 'types';
-import { Avatar, Button } from 'Components';
+import { Avatar, Button, ImageSlider } from 'Components';
 import { textStyle } from 'Constants/textStyles';
 import colors from 'Constants/colors';
 import moment from 'moment';

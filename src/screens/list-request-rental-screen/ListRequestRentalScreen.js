@@ -1,13 +1,15 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, FlatList } from 'react-native';
-import { ViewContainer } from 'Components';
-import { setSelectedRental, getRentalList } from '@redux/actions/rental';
+import { StyleSheet, FlatList } from 'react-native';
+import {
+  setSelectedRental,
+  getRentalList,
+  updateRentalStatus,
+} from '@redux/actions/rental';
 import { NavigationType, RentalType } from 'types';
 import { connect, useDispatch } from 'react-redux';
-import moment from 'moment';
-import { formatDate, formatPrice } from 'Utils/date';
-import { setPopUpData } from '@redux/actions';
+import { setPopUpData, cancelPopup } from '@redux/actions';
 import RequestRentalItem from './RequestRentalItem';
+import { getData, getActionType } from './utils';
 
 type PropsType = {
   navigation: NavigationType,
@@ -42,51 +44,32 @@ const ListRequestRentalScreen = ({
     setSelectedRental(_id);
     const selectedRental = rentalList.find(item => item._id === _id);
     navigation.navigate('RentDetailScreen', {
-      data: [
-        {
-          att: 'customer',
-          label: 'Customer',
-          detail: selectedRental.customer.fullName,
-          pressable: true,
-          onItemPress() {
-            setPopUpData(dispatch)({
-              popupType: 'profile',
-              description: selectedRental.customer,
-            });
-          },
-          nextIcon: 'next',
-        },
-
-        { att: '_id', label: 'ID', detail: selectedRental._id, hide: true },
-        {
-          att: 'startDate',
-          label: 'From date',
-          detail: formatDate(selectedRental.startDate),
-        },
-        {
-          att: 'endDate',
-          label: 'To date',
-          detail: formatDate(selectedRental.endDate),
-        },
-        {
-          att: 'carId',
-          label: 'Car model',
-          detail: selectedRental.carModel.name,
-        },
-        {
-          att: 'cost',
-          label: 'Price',
-          detail: formatPrice(selectedRental.totalCost),
-        },
-        { detail: 'Waiting for hire', att: 'status', label: 'Type' },
-      ],
-      avatar: selectedRental.customer.avatar,
-      name: selectedRental.customer.fullName,
-      type: 'decline-transaction',
+      data: getData(selectedRental, dispatch),
+      type: getActionType(selectedRental, true),
       onConfirm: () => {
         navigation.navigate('ScanScreen', { id: selectedRental._id });
       },
-      onDecline: () => {},
+      onDecline: () => {
+        setPopUpData(dispatch)({
+          title: 'Decline request',
+          description: 'Are you sure to decline this booking request?',
+          onConfirm() {
+            cancelPopup(dispatch);
+            updateRentalStatus(dispatch)(
+              {
+                id: selectedRental._id,
+                status: 'DECLINED',
+              },
+              {
+                onSuccess() {
+                  navigation.pop();
+                  getRentalList(dispatch)();
+                },
+              }
+            );
+          },
+        });
+      },
     });
     setRefreshing(true);
   };

@@ -7,7 +7,7 @@ type PopupType = {
   onConfirm: () => void,
   onClose: () => void,
   modalVisible: Boolean,
-  popupType: 'success' | 'confirm' | 'error' | 'prompt' | 'profile',
+  popupType: 'success' | 'confirm' | 'error' | 'prompt' | 'profile' | 'survey',
   grandResponder: Boolean,
   acceptOnly: Boolean,
 };

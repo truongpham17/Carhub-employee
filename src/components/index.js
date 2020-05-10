@@ -18,6 +18,7 @@ import ButtonGroup from './ButtonGroup';
 import QRCodeGenModal from './QRCodeGenModal';
 import ModalInput from './ModalInput';
 import Popup from './Popup';
+import ImageSlider from './ImageSlider';
 
 export {
   QRCodeGenModal,
@@ -40,4 +41,5 @@ export {
   ButtonGroup,
   ModalInput,
   Popup,
+  ImageSlider,
 };

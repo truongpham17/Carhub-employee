@@ -15,6 +15,7 @@ export function getRentalList(callback = INITIAL_CALLBACK) {
     try {
       dispatch({ type: GET_RENTAL_REQUEST });
       const result = await query({ endpoint: 'rental' });
+      console.log(result.data);
       if (result.status === STATUS.OK) {
         dispatch({ type: GET_RENTAL_SUCCESS, payload: result.data });
         callback.success();
@@ -33,10 +34,10 @@ export function setSelectedRental(_id) {
   };
 }
 
-export const updateRentalStatus = (
+export const updateRentalStatus = dispatch => async (
   { id, status, note },
   callback = INITIAL_CALLBACK
-) => async dispatch => {
+) => {
   try {
     dispatch({
       type: UPDATE_RENTAL_ITEM_REQUEST,
@@ -44,7 +45,15 @@ export const updateRentalStatus = (
     const result = await query({
       method: METHODS.patch,
       endpoint: `${ENDPOINTS.rental}/${id}`,
-      data: { status, note },
+      data: {
+        data: { status, note },
+        log: {
+          type: 'DECLINE',
+
+          title: 'Booking request decline',
+          detail: id,
+        },
+      },
     });
     if (result.status === 200) {
       dispatch({ type: UPDATE_RENTAL_ITEM_SUCCESS, payload: result.data });

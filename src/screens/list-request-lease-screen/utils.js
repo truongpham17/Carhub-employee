@@ -11,17 +11,18 @@ function getRejectData(lease: LeaseType) {
 }
 
 export function getData(lease: LeaseType, dispatch) {
+  console.log(lease.customer);
   return [
     { att: '_id', label: 'ID', value: lease._id, hide: true },
     {
       att: 'customer',
       label: 'Customer',
-      detail: lease.customer.fullName,
+      detail: lease.car.customer.fullName,
       pressable: true,
       onItemPress() {
         setPopUpData(dispatch)({
           popupType: 'profile',
-          description: lease.customer,
+          description: lease.car.customer,
         });
       },
       nextIcon: 'next',
@@ -43,7 +44,7 @@ export function getData(lease: LeaseType, dispatch) {
     },
     {
       att: 'odometer',
-      label: 'Car model',
+      label: 'Odometers',
       detail: lease.car.odometer,
     },
     {
@@ -57,12 +58,13 @@ export function getData(lease: LeaseType, dispatch) {
   ];
 }
 
-export function getActionType(lease: LeaseType): string {
+export function getActionType(lease: LeaseType, ignoreTransaction): string {
   if (lease.status === 'PENDING') {
     return 'accept-decline';
   }
+  if (ignoreTransaction) return '';
   if (lease.status === 'ACCEPTED') {
-    return 'transaction-accept-decline';
+    return 'transaction';
   }
   if (lease.status === 'WAIT_TO_RETURN') {
     return 'transaction';

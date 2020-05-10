@@ -17,18 +17,18 @@ type PropTypes = {
 const ScanQrCodeScreen = ({ navigation }: PropTypes) => {
   const dispatch = useDispatch();
   const [barcode, setBarcode] = useState(null);
-  const { id } = navigation.state.params;
+  // const { id } = navigation.state.params;
   const loading = useSelector(state => state.qrCode.loading);
 
   const loadInfo = async data => {
     const transactionInfo = await getTransationInfo(dispatch)(data);
-    if (transactionInfo._id !== id) {
-      return setPopUpData(dispatch)({
-        popupType: 'error',
-        title: 'Error',
-        description: "Contract id doesn't match",
-      });
-    }
+    // if (transactionInfo._id !== id) {
+    //   return setPopUpData(dispatch)({
+    //     popupType: 'error',
+    //     title: 'Error',
+    //     description: "Contract id doesn't match",
+    //   });
+    // }
     if (!transactionInfo) {
       setPopUpData(dispatch)({
         popupType: 'error',

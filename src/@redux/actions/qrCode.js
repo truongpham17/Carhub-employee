@@ -28,6 +28,7 @@ export const getTransationInfo = dispatch => async data => {
     const result = await query({ endpoint: `${data.type}/${data.id}` });
     if (result.status === STATUS.OK) {
       dispatch({ type: GET_TRANSACTION_SUCCESS });
+      console.log(result.data.customer);
       return { ...result.data, transactionType: data.type };
     }
     dispatch({ type: GET_TRANSACTION_FAILURE });
@@ -43,7 +44,7 @@ export const setTransactionInfo = dispatch => data =>
   });
 
 export const confirmTransaction = dispatch => async (
-  { id, type, toStatus, licensePlates },
+  { id, type, toStatus, licensePlates, message },
   callback = INITIAL_CALLBACK
 ) => {
   try {
@@ -51,7 +52,7 @@ export const confirmTransaction = dispatch => async (
     const result = await query({
       endpoint: `${type}/transaction/${id}`,
       method: METHODS.patch,
-      data: { toStatus, licensePlates },
+      data: { toStatus, licensePlates, message },
     });
     if (result.status === STATUS.OK) {
       dispatch({ type: CONFIRM_TRANSACTION_SUCCESS, payload: result.data });
