@@ -160,7 +160,7 @@ const RentDetailScreen = ({ navigation }: PropsType) => {
       onBackPress={handleBackPress}
       scrollable
       loading={loading}
-      containerStyle={{ minHeight: dimension.SCREEN_HEIGHT }}
+      // containerStyle={{ minHeight: dimension.SCREEN_HEIGHT }}
     >
       {requestType === 'lease' && <ImageSlider images={detail.car.images} />}
       <View style={{ flex: 1 }}>

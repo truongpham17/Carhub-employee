@@ -11,21 +11,19 @@ import {
 } from 'Constants/status';
 import { setPopUpData, cancelPopup } from '@redux/actions/app';
 import firebase from 'react-native-firebase';
-import { formatDate } from 'Utils/date';
 import { confirmTransaction, getRentalList } from '@redux/actions';
-import { LEASE_REJECT_REASONS, RENTAL_REJECT_REASONS } from 'Constants/app';
 import { getData, getActionType } from '../list-request-rental-screen/utils';
 
-const TRANSACTION_RENTAL = ['UPCOMING', 'CURRENT'];
-function getRentalLabel(rental: RentalType) {
-  switch (rental.status) {
-    case 'UPCOMING':
-      return 'Get car';
-    case 'CURRENT':
-    case 'OVERDUE':
-      return 'Return car';
-  }
-}
+// const TRANSACTION_RENTAL = ['UPCOMING', 'CURRENT'];
+// function getRentalLabel(rental: RentalType) {
+//   switch (rental.status) {
+//     case 'UPCOMING':
+//       return 'Get car';
+//     case 'CURRENT':
+//     case 'OVERDUE':
+//       return 'Return car';
+//   }
+// }
 // function getRentalData(rental: RentalType, type: String) {
 //   return {
 //     data: [

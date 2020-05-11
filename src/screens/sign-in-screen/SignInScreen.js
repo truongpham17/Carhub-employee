@@ -67,7 +67,7 @@ const SignInScreen = ({ navigation, loading, signIn }: PropTypes) => {
     >
       <Image style={styles.icon} source={appIcon} resizeMode="center" />
       {/* <View style={{ flex: 1 }}> */}
-      <Text style={styles.title}>Sign in</Text>
+      <Text style={styles.title}>Staff sign in</Text>
       <View style={styles.badge}>
         <InputForm
           label="Username"

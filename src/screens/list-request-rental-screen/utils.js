@@ -3,7 +3,8 @@ import { formatDate, formatPrice } from 'Utils/date';
 import { setPopUpData } from '@redux/actions';
 
 export function getData(rental: RentDetailType, dispatch) {
-  return [
+  // console.log(rental.status, rental.sharing);
+  const result = [
     {
       att: 'customer',
       label: 'Customer',
@@ -39,8 +40,29 @@ export function getData(rental: RentDetailType, dispatch) {
       label: 'Price',
       detail: formatPrice(rental.totalCost),
     },
+    {
+      att: 'deposit',
+      label: 'Deposit',
+      detail: formatPrice(rental.deposit),
+    },
     { detail: getStatus(rental.status), att: 'status', label: 'Type' },
   ];
+  if (rental.status === 'SHARED') {
+    result.push({
+      att: 'shareto',
+      label: 'Share to',
+      detail: rental.sharing.customer.fullName,
+      pressable: true,
+      onItemPress() {
+        setPopUpData(dispatch)({
+          popupType: 'profile',
+          description: rental.sharing.customer,
+        });
+      },
+      nextIcon: 'next',
+    });
+  }
+  return result;
 }
 
 function getStatus(status) {

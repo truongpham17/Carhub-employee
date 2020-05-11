@@ -102,9 +102,23 @@ const ScanCarScreen = ({ navigation }: PropTypes) => {
 
   const barcodeRecognize = barcodes => {
     if (!barcode) {
-      const data = JSON.parse(`${barcodes.data}`);
-      setBarcode(barcodes.data);
-      if (!data._id) {
+      let data = null;
+      try {
+        data = JSON.parse(`${barcodes.data}`);
+        setBarcode(barcodes.data);
+      } catch (error) {
+        setPopUpData(dispatch)({
+          acceptOnly: true,
+          title: 'Cannot recogize car',
+          onConfirm() {
+            navigation.pop();
+            cancelPopup(dispatch);
+          },
+        });
+        return;
+      }
+
+      if (!data || !data._id) {
         Alert.alert('Cannot recogize car');
         return;
       }

@@ -28,7 +28,7 @@ export const getTransationInfo = dispatch => async data => {
     const result = await query({ endpoint: `${data.type}/${data.id}` });
     if (result.status === STATUS.OK) {
       dispatch({ type: GET_TRANSACTION_SUCCESS });
-      console.log(result.data.customer);
+      // console.log(result.data.customer);
       return { ...result.data, transactionType: data.type };
     }
     dispatch({ type: GET_TRANSACTION_FAILURE });

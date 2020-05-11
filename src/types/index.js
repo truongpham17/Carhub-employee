@@ -15,6 +15,7 @@ export type RentDetailType = {
   pickupHub: HubType,
   status: String,
   type: String,
+  deposit: number,
   __v: 0,
 };
 export type RentailCarDetailType = {

@@ -17,10 +17,26 @@ type PropTypes = {
 const ScanQrCodeScreen = ({ navigation }: PropTypes) => {
   const dispatch = useDispatch();
   const [barcode, setBarcode] = useState(null);
+  const user = useSelector(state => state.user);
+  console.log(user);
   // const { id } = navigation.state.params;
   const loading = useSelector(state => state.qrCode.loading);
 
   const loadInfo = async data => {
+    if (!data || !data.id) {
+      return setPopUpData(dispatch)({
+        acceptOnly: true,
+        title: 'QR Code invalid',
+      });
+    }
+
+    if (data.expired > Date.now() + 120000) {
+      return setPopUpData(dispatch)({
+        acceptOnly: true,
+        title: 'QR Code invalid',
+      });
+    }
+
     const transactionInfo = await getTransationInfo(dispatch)(data);
     // if (transactionInfo._id !== id) {
     //   return setPopUpData(dispatch)({
@@ -43,9 +59,46 @@ const ScanQrCodeScreen = ({ navigation }: PropTypes) => {
     }
 
     if (transactionInfo.transactionType === 'rental') {
+      try {
+        if (
+          transactionInfo.pickoffHub._id !== user.hub &&
+          transactionInfo.pickupHub._id !== user.hub
+        ) {
+          setPopUpData(dispatch)({
+            popupType: 'error',
+            title: 'Error',
+            description: 'Can not find this request. Please try to scan again!',
+          });
+          return;
+        }
+      } catch (error) {
+        setPopUpData(dispatch)({
+          popupType: 'error',
+          title: 'Error',
+          description: 'Can not find this request. Please try to scan again!',
+        });
+        return;
+      }
+
       setTransactionInfo(dispatch)(transactionInfo);
       processRentalRequest({ transactionInfo, navigation, dispatch });
     } else {
+      try {
+        if (transactionInfo.hub._id !== user.hub) {
+          setPopUpData(dispatch)({
+            popupType: 'error',
+            title: 'Error',
+            description: 'Can not find this request. Please try to scan again!',
+          });
+        }
+      } catch (error) {
+        setPopUpData(dispatch)({
+          popupType: 'error',
+          title: 'Error',
+          description: 'Can not find this request. Please try to scan again!',
+        });
+      }
+
       setTransactionInfo(dispatch)(transactionInfo);
       processLeaseRequest({ transactionInfo, navigation, dispatch });
     }
@@ -56,7 +109,16 @@ const ScanQrCodeScreen = ({ navigation }: PropTypes) => {
   const barcodeRecognize = barcodes => {
     if (!barcode) {
       setBarcode(barcodes.data);
-      loadInfo({ ...JSON.parse(`${barcodes.data}`) });
+
+      try {
+        loadInfo({ ...JSON.parse(`${barcodes.data}`) });
+      } catch (error) {
+        setBarcode(null);
+        setPopUpData(dispatch)({
+          popupType: 'error',
+          title: 'Error',
+        });
+      }
     }
   };
   return (
