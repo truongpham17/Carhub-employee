@@ -7,6 +7,7 @@ import { NavigationType } from 'types';
 import { useDispatch, useSelector } from 'react-redux';
 import { setPopUpData, cancelPopup } from '@redux/actions/app';
 import { ViewContainer } from 'Components';
+import { EXPIRE_QR_CODE_TIME } from 'Constants/app';
 import processRentalRequest from './rental.utils';
 import processLeaseRequest from './lease.utils';
 
@@ -30,7 +31,7 @@ const ScanQrCodeScreen = ({ navigation }: PropTypes) => {
       });
     }
 
-    if (data.expired > Date.now() + 120000) {
+    if (data.expired > Date.now() + EXPIRE_QR_CODE_TIME) {
       return setPopUpData(dispatch)({
         acceptOnly: true,
         title: 'QR Code invalid',

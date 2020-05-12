@@ -27,3 +27,5 @@ export const LEASE_REQUEST_DECLINE_REASONS = [
   'The car is too old',
   'Other reasons',
 ];
+
+export const EXPIRE_QR_CODE_TIME = 120000;
