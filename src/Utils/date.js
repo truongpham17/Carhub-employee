@@ -8,7 +8,7 @@ export function substractDate(fromDate, toDate) {
 }
 
 export function formatPrice(price) {
-  return `${numberWithCommas(Number(price) * 23000)} VND`;
+  return `$ ${price}`;
 }
 
 function numberWithCommas(x) {
